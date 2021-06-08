@@ -1,48 +1,8 @@
-import fs from 'fs'
-import path from 'path'
-import jiaba from 'nodejieba'
+import jieba from 'nodejieba'
 
-import { Params } from '../utils/types.js'
-import { softmax } from '../utils/math.js'
-
-function readFile(path: string) {
-  return new Promise<string>((resolve, reject) => {
-    fs.readFile(path, 'utf-8', (err, data) => {
-      if (!err) {
-        resolve(data);
-      } else {
-        reject(err);
-      }
-    })
-  })
-}
-
-function writeFile(path: string, data: any) {
-  return new Promise<void>((resolve, reject) => {
-    fs.writeFile(path, data, 'utf-8', err => {
-      if (!err) {
-        resolve();
-      } else {
-        reject(err);
-      }
-    })
-  })
-}
-
-function readDir(entry: string): string[] {
-  let txtList: string[] = []
-  const dirInfo = fs.readdirSync(entry);
-  dirInfo.forEach(item => {
-    const location = path.join(entry, item);
-    const info = fs.statSync(location);
-    if (info.isDirectory()) {
-      txtList = txtList.concat(readDir(location));
-    } else {
-      txtList.push(location)
-    }
-  })
-  return txtList
-}
+import { Params } from '../utils/poet'
+import { softmax } from './math.js'
+import { writeFile, readFile, readDir } from './utils.js'
 
 function preprocessSentence(sentence: string): string {
   const punctuation_en = '!"#$%&\'()*+, -./:;<=>?@[\]^_`{|}~'
@@ -50,10 +10,10 @@ function preprocessSentence(sentence: string): string {
   sentence = sentence.replace(/[a-zA-Z]/g, '')  // 去除英文
   sentence = sentence.replace(/\d/g, '')  // 去除数字
   for (const p of punctuation_en) {
-    sentence = sentence.split(p).join('')
+    sentence = sentence.split(p).join('\n')
   }
   for (const p of punctuation_zh) {
-    sentence = sentence.split(p).join('')
+    sentence = sentence.split(p).join('\n')
   }
   return sentence
 }
@@ -69,20 +29,27 @@ export default class Processer implements Params {
    */
   transferMat: number[][]
   /**
-   * 词作为句首的概率
-   */
-  firstVector: number[]
-  /**
    * 压缩转移矩阵
    */
-  transferList: [number, number][][]
+  transferList: {k: number[], v: number[]}[]
+  /**
+   * 句首-句首转移矩阵
+   */
+  senTransferMat: number[][]
+  /**
+   * 句首-句首压缩转移矩阵
+   */
+  senTransferList: {k1: number[], k2: number[], v: number[]}
 
   constructor() {
     this.wordList = []
     this.articles = []
     this.transferMat = []
-    this.firstVector = []
     this.transferList = []
+    this.senTransferMat = []
+    this.senTransferList = {
+      k1: [], k2: [], v: []
+    }
   }
 
   /**
@@ -96,11 +63,10 @@ export default class Processer implements Params {
       await readFile(p)
       .then(content => {
         // 将文章分成句子列表
-        const sentences = content
-          .replace(/[，。\,\.]/g, '\n')
+        const sentences = preprocessSentence(content)
           .split(/\s/)
-          .map(s => preprocessSentence(s))
-          .map(s => jiaba.cut(s))  // 拆分每句为词
+          .map(s => jieba.cut(s))  // 拆分每句为词
+          .filter(s => s.length)
         for (const sentence of sentences) {
           for (const word of sentence) {
             if (!this.wordList.includes(word)) {
@@ -108,7 +74,8 @@ export default class Processer implements Params {
             }
           }
         }
-        this.articles.push(sentences)
+        if (sentences.length)
+          this.articles.push(sentences)
       })
       .catch(err => {
         console.log(err)
@@ -121,40 +88,50 @@ export default class Processer implements Params {
    */
   train() {
     this.transferMat = []
-    this.firstVector = []
 
     // 初始化
     const len = this.wordList.length
     for (let i = 0; i < len; i++) {
-      const tmp = []
+      const tmp1 = [], tmp2 = []
       for (let j = 0; j < len; j++) {
-        tmp.push(0)
+        tmp1.push(0)
+        tmp2.push(0)
       }
-      this.transferMat.push(tmp)
-      this.firstVector.push(0)
+      this.transferMat.push(tmp1)
+      this.senTransferMat.push(tmp2)
     }
 
     // 学习词转移矩阵和词作为句首的概率
     for (const article of this.articles) {
       for (const sentence of article) {
-        const ls = sentence.length
-        // 句子非空时学习句首分布
-        if (ls > 0) {
-          const firstWord = sentence[0]
-          const firstIndex = this.wordList.indexOf(firstWord)
-          this.firstVector[firstIndex]++  
-        }
+        // 学习句首分布
+        const firstWord = sentence[0]
+        const firstIndex = this.wordList.indexOf(firstWord)
+        this.transferMat[0][firstIndex]++
         // 学习转移概率
-        for (let i = 0; i < ls; i++) {
+        for (let i = 0; i < sentence.length; i++) {
           const i_a = this.wordList.indexOf(sentence[i])  // 本词的embedding索引
-          const i_b = i < ls - 1
+          const i_b = i < sentence.length - 1
             ? this.wordList.indexOf(sentence[i + 1])  // 下一个词的embedding索引
             : 0  // 若本词是句尾词，则下一个词是结束符号
           this.transferMat[i_a][i_b]++  // 转移计数
         }
       }
+
+      // 学习首句首词分布
+      const firstWord = article[0][0]
+      const firstIndex = this.wordList.indexOf(firstWord)
+      this.senTransferMat[0][firstIndex]++
+      // 学习句首-句首转移概率
+      for (let i = 0; i < article.length; i++) {
+        const i_a = this.wordList.indexOf(article[i][0])  // 本句首的embedding索引
+        const i_b = i < article.length - 1
+          ? this.wordList.indexOf(article[i + 1][0])  // 下一个句首的embedding索引
+          : 0  // 若本句是结尾，则下一个词是结束符号
+        this.senTransferMat[i_a][i_b]++  // 转移计数
+      }
     }
-    
+
     // 转移概率 = 转移计数 / 总数
     for (let i = 0; i < len; i++) {
       let tSum = this.transferMat[i].reduce((s, v) => s + v, 0)
@@ -164,32 +141,67 @@ export default class Processer implements Params {
       } else {
         this.transferMat[i][0] = 1
       }
+
+      tSum = this.senTransferMat[i].reduce((s, v) => s + v, 0)
+      if (tSum > 0) {
+        for (let j = 0; j < len; j++)
+          this.senTransferMat[i][j] /= tSum
+      } else {
+        this.senTransferMat[i][0] = 1
+      }
     }
-    // 句首概率 = 句首计数 / 总数
-    let fSum = this.firstVector.reduce((s, v) => s + v, 0)
-    for (let i = 0; i < len; i++)
-      this.firstVector[i] /= fSum
 
     // 创建压缩转移矩阵
-    this.transferList = []
-    const MAX_LENGTH = 10
+    this.transferList = [{
+      k: [], v: []
+    }]
+    // 句首分布照搬
     for (let i = 0; i < len; i++) {
-      const keyValues = this.transferMat[i].map<[number, number]>((v, k) => [v, k])
-      keyValues.sort((a, b) => b[0] - a[0])
-      // 取转移概率不为0的概率最大的前n个词（也可能少于n项）
-      const transferVec: [number, number][] = []
+      if (this.transferMat[0][i] > 0) {
+        this.transferList[0].k.push(i)
+        this.transferList[0].v.push(this.transferMat[0][i])
+      }
+    }
+    // 词转移分布
+    const MAX_LENGTH = 10
+    for (let i = 1; i < len; i++) {
+      const keyValues = this.transferMat[i].map<[number, number]>((v, k) => [k, v])
+      keyValues.sort((a, b) => b[1] - a[1])
+      const transferVec: {k: number[], v: number[]} = {
+        k: [], v: []
+      }
       let j = 0
-      while (j < MAX_LENGTH && keyValues[j][0] > 0) {
-        transferVec.push(keyValues[j])
+      // 到句尾的概率放在首位
+      transferVec.k.push(0)
+      transferVec.v.push(this.transferMat[i][0])
+      while (
+        (j < MAX_LENGTH && keyValues[j][1] > 0)  // 取转移概率不为0的概率最大的前n个词（也可能少于n项）
+        || (i === 0 && j < keyValues.length)  // 句首概率不压缩
+      ) {
+        if (keyValues[j][0] > 0) {
+          transferVec.k.push(keyValues[j][0])
+          transferVec.v.push(keyValues[j][1])
+        }
         j++
       }
       // 重新softmax
-      softmax(transferVec.map(e => e[0]))
-        .forEach((v, k) => {
-          transferVec[k][0] = v
-        })
+      transferVec.v = softmax(transferVec.v)
       this.transferList.push(transferVec)
     }
+
+    // 创建压缩转移矩阵
+    this.senTransferList = {
+      k1: [], k2: [], v: []
+    }
+    this.senTransferMat.forEach((vec, i) => vec
+      .map<[number, number, number]>((v, k) => [i, k, v])
+      .filter(t => t[2])
+      .forEach(t => {
+        this.senTransferList.k1.push(t[0])
+        this.senTransferList.k2.push(t[1])
+        this.senTransferList.v.push(t[2])
+      })
+    )
   }
 
   /**
@@ -199,7 +211,7 @@ export default class Processer implements Params {
     const json: Params = {
       wordList: this.wordList,
       transferList: this.transferList,
-      firstVector: this.firstVector
+      senTransferList: this.senTransferList
     }
     let jsonString = JSON.stringify(json)
     // 压缩小数
@@ -219,7 +231,7 @@ export default class Processer implements Params {
         break
       }
     }
-    await writeFile('./src/params.ts', 'export const params = ' + newString)
+    await writeFile('./src/params/index.ts', 'export const params = ' + newString)
     .then(() => {
       console.log('参数保存成功！')
     })

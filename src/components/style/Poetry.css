@@ -1,0 +1,26 @@
+@font-face{
+    font-family: 'syst'; 
+    src: url('../../assets/syst.woff') format('woff');
+}
+
+.text-frame {
+    position: absolute;
+    width: 84%;
+    height: 84%;
+    top: 8%;
+    left: 8%;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.poetry {
+    color: white;
+}
+
+.poetry p {
+    margin: 40px 0;
+    font-size: 18px;
+    text-shadow:0px 0px 8px #880000;
+    font-family: 'syst';
+    letter-spacing: 2px;
+}
