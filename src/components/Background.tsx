@@ -96,8 +96,11 @@ export default class Background extends Component {
       } else {
         this.bgB += 2
       }
-      if (this.canvas)
+      if (this.canvas) {
         this.canvas.style.backgroundColor = `rgb(${Math.abs(this.bgR)}, ${Math.abs(this.bgG)}, ${Math.abs(this.bgB)})`
+        this.canvas.style.opacity = '60%'
+      }
+        
       this.ticks = 0
     }
 

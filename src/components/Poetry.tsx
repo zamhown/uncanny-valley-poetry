@@ -12,6 +12,7 @@ interface IPoetryState {
 
 export default class Poetry extends Component<{}, IPoetryState> {
   lastSenIndex: number | undefined
+  poet: Poet
 
   state = {
     poetry: []
@@ -19,23 +20,23 @@ export default class Poetry extends Component<{}, IPoetryState> {
 
   constructor(props: {}) {
     super(props)
+    this.poet = new Poet(params)
   }
 
-  poet(count: number) {
+  addPoetry(count: number) {
     const poetry = []
-    const p = new Poet(params)
     for (let i = 0; i < count; i++) {
-      const sen = p.getSentence(this.lastSenIndex)
-      this.lastSenIndex = sen.index
+      const sen = this.poet.getSentence()
       poetry.push(sen.str)
     }
+    console.log(poetry)
     return poetry
   }
 
   load() {
     const { poetry } = this.state
     this.setState({
-      poetry: [...poetry, ...this.poet(20)]
+      poetry: [...poetry, ...this.addPoetry(20)]
     })
   }
 
