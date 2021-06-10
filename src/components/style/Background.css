@@ -1,3 +1,7 @@
+.canvas-container {
+    background-color: black;
+}
+
 canvas {
     opacity: 60%;
     left: 50%;

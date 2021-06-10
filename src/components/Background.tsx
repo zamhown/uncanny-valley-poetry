@@ -4,6 +4,7 @@ import './style/Background.css'
 
 export default class Background extends Component {
   canvasRef = React.createRef<HTMLCanvasElement>()
+  containerRef = React.createRef<HTMLDivElement>()
   c2d: any
   _canvas: any
   _c2d: any
@@ -32,30 +33,33 @@ export default class Background extends Component {
     return this.canvasRef.current as HTMLCanvasElement
   }
 
+  get container(): HTMLDivElement {
+    return this.containerRef.current as HTMLDivElement
+  }
+
   handleResize() {
     this.w = this.canvas.width = this._canvas.width = window.innerWidth
     this.h = this.canvas.height = this._canvas.height = window.innerHeight
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.c2d = this.canvas.getContext("2d")
     this._canvas = document.createElement("canvas")
     this._c2d = this._canvas.getContext("2d")
     // 监听窗口大小改变
-    window.addEventListener('resize', this.handleResize.bind(this));
+    window.addEventListener('resize', this.handleResize.bind(this))
     this.initAnim()
   }
 
   componentWillUnmount() {
     // 移除监听器，防止多个组件之间导致this的指向紊乱
-    window.removeEventListener('resize', this.handleResize.bind(this));
+    window.removeEventListener('resize', this.handleResize.bind(this))
   }
 
   render() {
-    const canvas = <canvas
-      ref={this.canvasRef}
-    />
-    return canvas;
+    return <div className="canvas-container" ref={this.containerRef}>
+      <canvas ref={this.canvasRef} />
+    </div>;
   }
 
   initAnim() {
@@ -75,7 +79,7 @@ export default class Background extends Component {
     this.anim()
   }
 
-  anim() {
+  bg() {
     this.ticks++
     if (this.ticks % 20 === 0) {
       if (this.bgR >= 0) {
@@ -96,13 +100,16 @@ export default class Background extends Component {
       } else {
         this.bgB += 2
       }
-      if (this.canvas) {
-        this.canvas.style.backgroundColor = `rgb(${Math.abs(this.bgR)}, ${Math.abs(this.bgG)}, ${Math.abs(this.bgB)})`
-        this.canvas.style.opacity = '60%'
+      if (this.container) {
+        this.container.style.backgroundColor = `rgb(${Math.abs(this.bgR)}, ${Math.abs(this.bgG)}, ${Math.abs(this.bgB)})`
       }
-        
+
       this.ticks = 0
     }
+  }
+
+  anim() {
+    this.bg()
 
     this._c2d.clearRect(0, 0, this.w, this.h)
     this._c2d.fillStyle = '#001b12'
