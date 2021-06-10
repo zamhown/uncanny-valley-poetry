@@ -1,23 +1,24 @@
 {
   "files": {
-    "main.css": "/uncanny-valley-poetry/static/css/main.76eee2ae.chunk.css",
-    "main.js": "/uncanny-valley-poetry/static/js/main.23684c50.chunk.js",
-    "main.js.map": "/uncanny-valley-poetry/static/js/main.23684c50.chunk.js.map",
-    "runtime-main.js": "/uncanny-valley-poetry/static/js/runtime-main.b4f3cb23.js",
-    "runtime-main.js.map": "/uncanny-valley-poetry/static/js/runtime-main.b4f3cb23.js.map",
-    "static/js/2.a18a7526.chunk.js": "/uncanny-valley-poetry/static/js/2.a18a7526.chunk.js",
-    "static/js/2.a18a7526.chunk.js.map": "/uncanny-valley-poetry/static/js/2.a18a7526.chunk.js.map",
-    "static/js/3.3fee1ddb.chunk.js": "/uncanny-valley-poetry/static/js/3.3fee1ddb.chunk.js",
-    "static/js/3.3fee1ddb.chunk.js.map": "/uncanny-valley-poetry/static/js/3.3fee1ddb.chunk.js.map",
+    "main.css": "/uncanny-valley-poetry/static/css/main.1a50a3f3.chunk.css",
+    "main.js": "/uncanny-valley-poetry/static/js/main.b9a03edb.chunk.js",
+    "main.js.map": "/uncanny-valley-poetry/static/js/main.b9a03edb.chunk.js.map",
+    "runtime-main.js": "/uncanny-valley-poetry/static/js/runtime-main.8a6a6e97.js",
+    "runtime-main.js.map": "/uncanny-valley-poetry/static/js/runtime-main.8a6a6e97.js.map",
+    "static/js/2.74be0558.chunk.js": "/uncanny-valley-poetry/static/js/2.74be0558.chunk.js",
+    "static/js/2.74be0558.chunk.js.map": "/uncanny-valley-poetry/static/js/2.74be0558.chunk.js.map",
+    "static/js/3.e32a879a.chunk.js": "/uncanny-valley-poetry/static/js/3.e32a879a.chunk.js",
+    "static/js/3.e32a879a.chunk.js.map": "/uncanny-valley-poetry/static/js/3.e32a879a.chunk.js.map",
     "index.html": "/uncanny-valley-poetry/index.html",
-    "static/css/main.76eee2ae.chunk.css.map": "/uncanny-valley-poetry/static/css/main.76eee2ae.chunk.css.map",
-    "static/js/2.a18a7526.chunk.js.LICENSE.txt": "/uncanny-valley-poetry/static/js/2.a18a7526.chunk.js.LICENSE.txt",
-    "static/media/Poetry.css": "/uncanny-valley-poetry/static/media/syst.d5dbff67.woff"
+    "static/css/main.1a50a3f3.chunk.css.map": "/uncanny-valley-poetry/static/css/main.1a50a3f3.chunk.css.map",
+    "static/js/2.74be0558.chunk.js.LICENSE.txt": "/uncanny-valley-poetry/static/js/2.74be0558.chunk.js.LICENSE.txt",
+    "static/media/Poetry.css": "/uncanny-valley-poetry/static/media/syst.d5dbff67.woff",
+    "static/media/title.c4b61619.png": "/uncanny-valley-poetry/static/media/title.c4b61619.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.b4f3cb23.js",
-    "static/js/2.a18a7526.chunk.js",
-    "static/css/main.76eee2ae.chunk.css",
-    "static/js/main.23684c50.chunk.js"
+    "static/js/runtime-main.8a6a6e97.js",
+    "static/js/2.74be0558.chunk.js",
+    "static/css/main.1a50a3f3.chunk.css",
+    "static/js/main.b9a03edb.chunk.js"
   ]
 }

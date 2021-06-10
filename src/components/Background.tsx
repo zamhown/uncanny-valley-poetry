@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import './style/Background.css'
+import './styles/Background.css'
 
 export default class Background extends Component {
   canvasRef = React.createRef<HTMLCanvasElement>()
@@ -58,7 +58,7 @@ export default class Background extends Component {
 
   render() {
     return <div className="canvas-container" ref={this.containerRef}>
-      <canvas ref={this.canvasRef} />
+      <canvas ref={this.canvasRef} style={{opacity: 0.6}} />
     </div>;
   }
 

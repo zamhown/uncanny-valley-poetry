@@ -1,0 +1,25 @@
+.index-frame {
+    position: absolute;
+    width: 84%;
+    height: 84%;
+    top: 8%;
+    left: 8%;
+    overflow: hidden;
+}
+
+.index {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.title {
+    max-width: 400px;
+    width: 90%;
+}
+
+.loading {
+    margin-top: 0px;
+    color: #888888;
+}

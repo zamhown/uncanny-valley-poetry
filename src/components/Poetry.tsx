@@ -4,13 +4,17 @@ import InfiniteScroll from 'react-infinite-scroller'
 import Poet from '../utils/poet'
 import { params } from '../params/index'
 
-import './style/Poetry.css'
+import './styles/Poetry.css'
+
+interface IPoetryProps {
+  show?: boolean
+}
 
 interface IPoetryState {
   poetry: string[]
 }
 
-export default class Poetry extends Component<{}, IPoetryState> {
+export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   lastSenIndex: number | undefined
   poet: Poet
 
@@ -18,7 +22,7 @@ export default class Poetry extends Component<{}, IPoetryState> {
     poetry: []
   }
 
-  constructor(props: {}) {
+  constructor(props: IPoetryProps) {
     super(props)
     this.poet = new Poet(params)
   }
@@ -49,7 +53,7 @@ export default class Poetry extends Component<{}, IPoetryState> {
       (s, k) => <p key={k}>{s}</p>
     )
     return (
-      <div className="text-frame">
+      <div className="text-frame" style={{opacity: (this.props.show ?? 1) ? 1 : 0}}>
         <InfiniteScroll
           loadMore={this.load.bind(this)}
           hasMore={true}
