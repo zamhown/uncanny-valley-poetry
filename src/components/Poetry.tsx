@@ -59,6 +59,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
           hasMore={true}
           useWindow={false}
         >
+          <div className="placeholder"></div>
           <div className="poetry">
             {poetry}
           </div>

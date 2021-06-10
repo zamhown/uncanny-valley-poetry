@@ -27,3 +27,16 @@ body {
   filter: blur(10px);
 }
 
+.link {
+  position: fixed;
+  width: 100%;
+  margin: 5px 0px;
+  top: 0;
+  left: 0;
+}
+
+.link a {
+  color: #888888;
+  font-size: 12px;
+  opacity: 0.6;
+}

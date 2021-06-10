@@ -22,4 +22,6 @@
 .loading {
     margin-top: 0px;
     color: #888888;
+    font-size: 12px;
+    margin-top: -10px;
 }

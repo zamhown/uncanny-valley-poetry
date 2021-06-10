@@ -24,3 +24,7 @@
     font-family: 'syst';
     letter-spacing: 2px;
 }
+
+.placeholder {
+    height: 40vh;
+}
