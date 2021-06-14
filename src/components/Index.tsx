@@ -12,10 +12,6 @@ export default class Index extends Component<IIndexProps> {
   timer: any
   hasLoaded: boolean = false
 
-  constructor(props: IIndexProps) {
-    super(props)
-  }
-
   refresh() {
     this.loadTime += 100
     if ((this.hasLoaded && this.loadTime >= 5000) || this.loadTime >= 10000) {

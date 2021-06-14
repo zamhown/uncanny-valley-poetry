@@ -19,14 +19,19 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
+    "dev": "npm start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "train": "node --loader ts-node/esm ./src/scripts/train.ts",
-    "poet": "node --loader ts-node/esm ./src/scripts/eval.ts",
-    "train-hash": "node --loader ts-node/esm ./src/scripts/train_hash.ts",
-    "poet-hash": "node --loader ts-node/esm ./src/scripts/eval_hash.ts"
+
+    "init": "python python/init.py",
+    "train-poet": "python python/process_poet.py",
+    "eval-poet": "python python/eval_poet.py",
+    "import-params": "python python/export.py",
+    "update-img": "python python/process_img.py",
+
+    "poet": "node --loader ts-node/esm ./src/scripts/eval.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -49,7 +54,6 @@
   "devDependencies": {
     "@types/lodash": "^4.14.170",
     "@types/react-infinite-scroller": "^1.2.1",
-    "nodejieba": "^2.5.2",
     "ts-node": "^10.0.0"
   }
 }

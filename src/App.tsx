@@ -17,7 +17,7 @@ function App() {
         {
           loaded ? (
             <p className="link">
-              <a href="https://github.com/zamhown/uncanny-valley-poetry" target="_blank">fork me on GitHub</a>
+              <a href="https://github.com/zamhown/uncanny-valley-poetry" target="_blank" rel="noreferrer">fork me on GitHub</a>
             </p>
           ) : null
         }

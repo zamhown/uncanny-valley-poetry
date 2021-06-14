@@ -17,6 +17,7 @@
 .title {
     max-width: 400px;
     width: 90%;
+    animation: loading 1s infinite linear;
 }
 
 .loading {
@@ -24,4 +25,12 @@
     color: #888888;
     font-size: 12px;
     margin-top: -10px;
+}
+
+@keyframes loading {
+    from { filter: blur(0px) }
+    to {
+        filter: blur(5px);
+        transition: all 1s;
+    }
 }

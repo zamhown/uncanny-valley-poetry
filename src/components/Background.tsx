@@ -4,7 +4,7 @@ import './styles/Background.css'
 
 export default class Background extends Component {
   canvasRef = React.createRef<HTMLCanvasElement>()
-  containerRef = React.createRef<HTMLDivElement>()
+  bgRef = React.createRef<HTMLDivElement>()
   c2d: any
   _canvas: any
   _c2d: any
@@ -33,8 +33,8 @@ export default class Background extends Component {
     return this.canvasRef.current as HTMLCanvasElement
   }
 
-  get container(): HTMLDivElement {
-    return this.containerRef.current as HTMLDivElement
+  get bgDiv(): HTMLDivElement {
+    return this.bgRef.current as HTMLDivElement
   }
 
   handleResize() {
@@ -57,8 +57,9 @@ export default class Background extends Component {
   }
 
   render() {
-    return <div className="canvas-container" ref={this.containerRef}>
-      <canvas ref={this.canvasRef} style={{opacity: 0.6}} />
+    return <div className="canvas-container">
+      <canvas ref={this.canvasRef} />
+      <div className="bg" ref={this.bgRef}></div>
     </div>;
   }
 
@@ -100,8 +101,8 @@ export default class Background extends Component {
       } else {
         this.bgB += 2
       }
-      if (this.container) {
-        this.container.style.backgroundColor = `rgb(${Math.abs(this.bgR)}, ${Math.abs(this.bgG)}, ${Math.abs(this.bgB)})`
+      if (this.bgDiv) {
+        this.bgDiv.style.backgroundColor = `rgb(${Math.abs(this.bgR)}, ${Math.abs(this.bgG)}, ${Math.abs(this.bgB)})`
       }
 
       this.ticks = 0

@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import Poet from '../utils/poet'
-import { params } from '../params/index'
+import { params } from '../params/params'
+import { wordImgMap } from '../params/wordImgMap'
 
 import './styles/Poetry.css'
 

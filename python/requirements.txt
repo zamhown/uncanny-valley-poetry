@@ -1,0 +1,7 @@
+jieba
+zhon
+numpy
+pytorch
+torchvision
+scikit-image
+opencv-python

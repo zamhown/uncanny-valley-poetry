@@ -13,6 +13,21 @@ export interface Params {
   senTransferList: {k1: number[], k2: number[], v: number[]}
 }
 
+export interface RawParams {
+  /**
+   * embedding表
+   */
+  wordList: string[]
+  /**
+   * 压缩转移矩阵
+   */
+  transferList: [number[], number[]][]
+  /**
+   * 句首-句首压缩转移矩阵
+   */
+  senTransferList: [number[], number[], number[]]
+}
+
 /**
  * 根据概率分布随机抽取一项，返回索引
  * @param p 概率分布
@@ -72,22 +87,20 @@ export default class Poet implements Params {
   senTransferList: {k1: number[], k2: number[], v: number[]}
 
   /**
-   * theta1参数
+   * theta参数
    */
-  theta1: number = 50
-  /**
-   * theta2参数
-   */
-  theta2: number = 0
+  theta: number = 60
   /**
    * alpha参数
    */
-  alpha: number = 1.5
+  alpha: number = 0.5
+  /**
+   * beta参数
+   */
+  beta: number = 1.4
 
-  params: Params
 
-  constructor(params: Params) {
-    this.params = params
+  constructor(params: RawParams) {
     this.wordList = []
     this.transferList = []
     this.lastVector = []
@@ -95,25 +108,31 @@ export default class Poet implements Params {
       k1: [], k2: [], v: []
     }
     this.senTransferMat = {}
-    this.init()
+    this.init(params)
   }
 
   /**
    * 初始化
    */
-  init() {
-    const p = this.params
-    this.wordList = p.wordList
-    this.transferList = p.transferList
-    this.senTransferList = p.senTransferList
+  init(params: RawParams) {
+    this.wordList = params.wordList
+    this.transferList = params.transferList.map(t => ({
+      'k': t[0],
+      'v': t[1]
+    }))
+    this.senTransferList = {
+      'k1': params.senTransferList[0],
+      'k2': params.senTransferList[1],
+      'v': params.senTransferList[2],
+    }
 
     // 备份last vector
     this.lastVector = this.transferList.map(vec => vec.v[0])
 
-    // 所有词转移概率都乘以theta1
-    this.transferList.forEach(vec => vec.v = vec.v.map(v => v * this.theta1))
-    // 所有句转移概率都乘以theta2
-    this.senTransferList.v = this.senTransferList.v.map(v => v * this.theta2)
+    // 所有词转移概率都乘以theta
+    this.transferList.forEach(vec => vec.v = vec.v.map(v => v * this.theta))
+    // 所有句转移概率都乘以alpha
+    this.senTransferList.v = this.senTransferList.v.map(v => v * this.alpha)
 
     // 构建句首-句首转移矩阵
     const stl = this.senTransferList
@@ -205,7 +224,7 @@ export default class Poet implements Params {
         break
       // 每生成一个词，提高所有词引发句子结束的概率
       for (let i = 1; i < len; i++) {
-        this.transferList[i].v[0] *= this.alpha
+        this.transferList[i].v[0] *= this.beta
       }
     }
     return {
