@@ -1,4 +1,3 @@
-import time
 import json
 import string
 from zhon.hanzi import punctuation as zh_punc
@@ -28,5 +27,11 @@ def get_imagenet_map():
         file.write(content)
 
 
-if __name__ == '__main__':
+def init():
+    print('初始化中...')
     get_imagenet_map()
+    print('初始化完成')
+
+
+if __name__ == '__main__':
+    init()

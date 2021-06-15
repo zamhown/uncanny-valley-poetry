@@ -1,9 +1,8 @@
 import numpy as np
 import pickle
+import json
 
-from numpy.core.defchararray import index
-
-from utils import get_poet_params_path
+from utils import get_path, get_poet_params_path
 
 
 def softmax(x):
@@ -70,4 +69,7 @@ def eval(count, theta, alpha, beta):
 
 
 if __name__ == '__main__':
-    eval(50, 60, 0.5, 1.01)
+    with open(get_path('../src/params/hyperParams.json'), 'r') as file:
+        context = file.read()
+        hp = json.loads(context)
+    eval(50, hp['theta'], hp['alpha'], hp['beta'])

@@ -1,3 +1,7 @@
+import {randomChoice, softmax} from './math'
+import hyperParams from '../params/hyperParams.json'
+
+
 export interface Params {
   /**
    * embedding表
@@ -28,40 +32,6 @@ export interface RawParams {
   senTransferList: [number[], number[], number[]]
 }
 
-/**
- * 根据概率分布随机抽取一项，返回索引
- * @param p 概率分布
- */
-export function randomChoice(p: number[]): number {
-  const r = Math.random()
-  let ptr = 0
-  for (let i = 0; i < p.length - 1; i++) {
-    if (r >= ptr && r < ptr + p[i]) {
-      return i
-    } else {
-      ptr += p[i]
-    }
-  }
-  return p.length - 1
-}
-  
-export function sigmoid(x: number): number {
-  // 对sigmoid函数的优化，避免了出现极大的数据溢出
-  if (x >= 0) {
-    return 1 / (1 + Math.pow(Math.E, -x))
-  } else {
-    const ex = Math.pow(Math.E, x)
-    return ex / (1 + ex)
-  }
-}
-
-export function softmax(x: number[]): number[] {
-  const sigX = x.map(x => sigmoid(-x))
-  const sig = sigX.map(x => 1 / x - 1)
-  const sum = sig.reduce((s, x) => s + x, 0)
-  return sig.map(x => x / sum)
-}
-
 export default class Poet implements Params {
   /**
    * embedding表
@@ -89,15 +59,15 @@ export default class Poet implements Params {
   /**
    * theta参数
    */
-  theta: number = 60
+  theta: number = hyperParams.theta
   /**
    * alpha参数
    */
-  alpha: number = 0.5
+  alpha: number = hyperParams.alpha
   /**
    * beta参数
    */
-  beta: number = 1.4
+  beta: number = hyperParams.beta
 
 
   constructor(params: RawParams) {
@@ -204,8 +174,9 @@ export default class Poet implements Params {
   }
 
   getSentence(lastSenIndex?: number): {
-    str: string,
-    index: number
+    string: string,
+    index: number,
+    words: string[]
   } {
     // 还原last vector
     this.transferList.forEach((vec, id) => {
@@ -216,10 +187,12 @@ export default class Poet implements Params {
     const firstIndex = this.getSentenceFirstWordIndex(lastSenIndex)
     let wordIndex = firstIndex
     let sentence = this.wordList[wordIndex]
+    let words = [this.wordList[wordIndex]]
     while (true) {
       wordIndex = this.getNewWordIndex(wordIndex)
       const word = this.wordList[wordIndex]
       sentence = sentence.concat(word)
+      words.push(word)
       if (word === '\n')
         break
       // 每生成一个词，提高所有词引发句子结束的概率
@@ -228,8 +201,9 @@ export default class Poet implements Params {
       }
     }
     return {
-      str: sentence,
-      index: firstIndex
+      string: sentence,
+      index: firstIndex,
+      words
     }
   }
 }

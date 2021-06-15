@@ -99,6 +99,8 @@ def get_tm(dataset_dir):
 
 
 def train():
+    print('诗歌训练中...')
+    
     word_list, transfer_mat, sen_transfer_mat = get_tm(get_path('text_datasets'))
     params = dict(zip(['word_list', 'transfer_mat', 'sen_transfer_mat'], [word_list, transfer_mat, sen_transfer_mat]))
     with open(get_poet_params_path(), 'wb+') as file:
@@ -107,6 +109,8 @@ def train():
     word_list_content = json.dumps(word_list, ensure_ascii=False)
     with open(get_path('params/word_list.json'), 'w', encoding='utf-8') as file:
         file.write(word_list_content)
+
+    print('诗歌训练完成')
 
 
 if __name__ == '__main__':

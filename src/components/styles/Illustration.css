@@ -1,0 +1,18 @@
+.illustration-container {
+    position: relative;
+    height: 224px;
+    margin: 70px 0 !important;
+}
+
+.illustration-container canvas {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    -webkit-transform: translate( -50%, 0%);
+    -ms-transform: translate( -50%, 0%);
+    transform: translate( -50%, 0%);
+}
+
+.illustration-container canvas:first-child {
+    box-shadow: 0 0 8px #161616;
+}

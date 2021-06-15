@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 
+import Illustration from './Illustration'
 import Poet from '../utils/poet'
+import { randomSample } from '../utils/math'
 import { params } from '../params/params'
 import { wordImgMap } from '../params/wordImgMap'
 
@@ -17,31 +19,55 @@ interface IPoetryState {
 
 export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   lastSenIndex: number | undefined
-  poet: Poet
+  poet: Poet = new Poet(params)
+
+  illustrations: {
+    [where: number]: {
+      wordList: string[],
+      imgList: string[]
+    }
+  } = {}
+  illustrationWords: Set<string> = new Set()
 
   state = {
     poetry: []
-  }
-
-  constructor(props: IPoetryProps) {
-    super(props)
-    this.poet = new Poet(params)
   }
 
   addPoetry(count: number) {
     const poetry = []
     for (let i = 0; i < count; i++) {
       const sen = this.poet.getSentence()
-      poetry.push(sen.str)
+      poetry.push(sen.string)
+      // 插图
+      for (const w of sen.words) {
+        if (wordImgMap[w])
+          this.illustrationWords.add(w)
+      }
     }
-    console.log(poetry)
+    
+    if (this.illustrationWords.size >= 10) {
+      const iwList: string[] = []
+      this.illustrationWords.forEach(w => iwList.push(w))
+      const words = randomSample(iwList, 3)
+      console.log(words)
+
+      this.illustrationWords.clear()
+      this.illustrations[this.state.poetry.length + count] = {
+        imgList: words.map(
+          w => randomSample(wordImgMap[w], 1)[0]
+        ),
+        wordList: words
+      }
+    }
+
     return poetry
   }
 
   load() {
     const { poetry } = this.state
+    const newPoetry = this.addPoetry(20)
     this.setState({
-      poetry: [...poetry, ...this.addPoetry(20)]
+      poetry: [...poetry, ...newPoetry]
     })
   }
 
@@ -50,9 +76,17 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   }
 
   render() {
-    const poetry = this.state.poetry.map(
-      (s, k) => <p key={k}>{s}</p>
-    )
+    const poetry: any[] = []
+    this.state.poetry.forEach((s, i) => {
+      poetry.push(<p key={i}>{s}</p>)
+      if (this.illustrations[i + 1]) {
+        poetry.push(<Illustration
+          key={'_' + i}
+          imgList={this.illustrations[i + 1].imgList}
+          wordList={this.illustrations[i + 1].wordList}
+        />)
+      }
+    })
     return (
       <div className="text-frame" style={{opacity: (this.props.show ?? 1) ? 1 : 0}}>
         <InfiniteScroll
@@ -68,6 +102,4 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
       </div>
     )
   }
-
-  
 }

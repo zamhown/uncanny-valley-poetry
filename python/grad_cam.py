@@ -1,9 +1,8 @@
-import os, shutil
+import os
 import numpy as np
 import cv2
 from skimage import io
 import torch
-from torch.autograd import Function
 import torch.nn as nn
 from torchvision import models
 

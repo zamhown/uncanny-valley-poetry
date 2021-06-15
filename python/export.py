@@ -2,8 +2,6 @@ import pickle
 import json
 import os, shutil
 
-from skimage import io
-import numpy as np
 
 from utils import get_path, get_poet_params_path
 
@@ -41,6 +39,8 @@ def transform(word_list, transfer_mat, sen_transfer_mat):
 
 
 def export_poet():
+    print('导出诗歌参数中...')
+
     with open(get_poet_params_path(), 'rb+') as file:
         params = pickle.load(file)
 
@@ -56,8 +56,12 @@ def export_poet():
     with open(get_path('../src/params/params.ts'), 'w', encoding='utf-8') as file:
         file.write(content)
 
+    print('诗歌参数导出完成')
+
 
 def export_img():
+    print('导出插图中...')
+
     with open(get_path('params/word_img_map.json'), 'r', encoding='utf-8') as file:
         context = file.read()
         word_img_map = json.loads(context)
@@ -89,6 +93,8 @@ def export_img():
 
     with open(get_path('../src/params/wordImgMap.ts'), 'w', encoding='utf-8') as file:
         file.write(content)
+
+    print('插图导出完成')
 
 
 if __name__ == '__main__':

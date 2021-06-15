@@ -60,10 +60,12 @@ def process_cam(net, img_path, class_id, output_dir):
     cv2.imwrite(path, pic, [int(cv2.IMWRITE_JPEG_QUALITY), 50])
 
 
-if __name__ == '__main__':
+def process_img():
+    print('生成插图中...')
+
     net = get_net()
     word_img_map, img_class_map = get_word_img_map()
-    random_sample_word_img_map(word_img_map, 2)
+    random_sample_word_img_map(word_img_map, 3)
 
     with open(get_path('params/word_img_map.json'), 'w', encoding='utf-8') as file:
         file.write(json.dumps(word_img_map, ensure_ascii=False))
@@ -73,6 +75,15 @@ if __name__ == '__main__':
         shutil.rmtree(output_dir)
     os.mkdir(output_dir)
 
-    for w in word_img_map:
-        for fn in word_img_map[w]:
-            process_cam(net, get_path('img_datasets/ILSVRC2012_img_val/' + fn), img_class_map[fn], output_dir)
+    imgs = set(fn for w in word_img_map for fn in word_img_map[w])
+    i = 0
+    for fn in imgs:
+        process_cam(net, get_path('img_datasets/ILSVRC2012_img_val/' + fn), img_class_map[fn], output_dir)
+        i += 1
+        print(f'({i}/{len(imgs)})')
+
+    print('插图生成完成')
+
+
+if __name__ == '__main__':
+    process_img()

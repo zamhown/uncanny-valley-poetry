@@ -20,7 +20,7 @@
 .poetry p {
     margin: 40px 0;
     font-size: 18px;
-    text-shadow:0px 0px 8px #880000;
+    text-shadow:0px 0px 10px #880000;
     font-family: 'syst';
     letter-spacing: 2px;
 }
