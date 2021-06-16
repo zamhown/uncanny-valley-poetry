@@ -2,8 +2,11 @@
     position: absolute;
     width: 84%;
     height: 84%;
-    top: 8%;
-    left: 8%;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate( -50%, -50%);
+    -ms-transform: translate( -50%, -50%);
+    transform: translate( -50%, -50%);
     overflow: hidden;
 }
 

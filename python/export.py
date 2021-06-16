@@ -74,13 +74,11 @@ def export_img():
     # 对图片文件名做哈希，缩短文件名
     new_word_img_map = {}
     img_hash_map = {}
-    img_len = 0
     for w in word_img_map:
         new_word_img_map[w] = []
         for fn in word_img_map[w]:
             if fn not in img_hash_map:
-                img_hash_map[fn] = str(img_len) + '.jpg'
-                img_len += 1
+                img_hash_map[fn] = str(int(fn[fn.rindex('_') + 1 : fn.rindex('.')])) + '.jpg'
 
                 # 导出文件
                 shutil.copy(get_path('imgs/' + fn), img_output_dir + img_hash_map[fn])

@@ -84,6 +84,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
           key={'_' + i}
           imgList={this.illustrations[i + 1].imgList}
           wordList={this.illustrations[i + 1].wordList}
+          lineCount={i + 1}
         />)
       }
     })

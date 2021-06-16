@@ -33,7 +33,6 @@ def get_word_img_map():
                     if w in word_list:
                         if w not in word_img_map:
                             word_img_map[w] = []
-                            print(w)
                         word_img_map[w].append(fn)
                         flag = True
                 
@@ -65,20 +64,21 @@ def process_img():
 
     net = get_net()
     word_img_map, img_class_map = get_word_img_map()
+    print(list(word_img_map.keys()))
     random_sample_word_img_map(word_img_map, 3)
 
     with open(get_path('params/word_img_map.json'), 'w', encoding='utf-8') as file:
         file.write(json.dumps(word_img_map, ensure_ascii=False))
 
     output_dir = get_path('imgs')
-    if os.path.exists(output_dir):
-        shutil.rmtree(output_dir)
-    os.mkdir(output_dir)
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
     imgs = set(fn for w in word_img_map for fn in word_img_map[w])
     i = 0
     for fn in imgs:
-        process_cam(net, get_path('img_datasets/ILSVRC2012_img_val/' + fn), img_class_map[fn], output_dir)
+        if not os.path.exists(get_path('imgs/' + fn)):
+            process_cam(net, get_path('img_datasets/ILSVRC2012_img_val/' + fn), img_class_map[fn], output_dir)
         i += 1
         print(f'({i}/{len(imgs)})')
 

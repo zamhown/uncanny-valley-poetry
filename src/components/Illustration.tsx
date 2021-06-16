@@ -5,6 +5,7 @@ import './styles/Illustration.css'
 interface IIllustrationProps {
   wordList: string[],
   imgList: string[],
+  lineCount: number,
   key?: any
 }
 
@@ -34,6 +35,8 @@ function hsv2rgb(h: number, s: number, v: number): [number, number, number] {
 
 export default class Illustration extends Component<IIllustrationProps> {
   canvasRefs: React.RefObject<HTMLCanvasElement>[]
+  maskRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
+  maskLabelRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
   c2d: any[] = []
   imgObjList: HTMLImageElement[] = []
   mirror: boolean[] = []  // 是否翻转
@@ -52,7 +55,7 @@ export default class Illustration extends Component<IIllustrationProps> {
   }
 
   get absoluteTop(): number {
-     return this.canvas(0).getBoundingClientRect().top
+     return this.maskRef.current ? this.maskRef.current.getBoundingClientRect().top : -1000
   }
 
   componentDidMount() {
@@ -65,6 +68,17 @@ export default class Illustration extends Component<IIllustrationProps> {
     this.renderCanvas()
 
     window.addEventListener('scroll', this.handleScroll.bind(this), true)
+
+    const mask = this.maskRef.current!
+    const maskLabel = this.maskLabelRef.current!
+    mask.onclick = () => {
+      if (maskLabel.style.display === 'block') {
+        maskLabel.style.display = 'none'
+      } else {
+        maskLabel.style.display = 'block'
+      }
+    }
+    maskLabel.onclick = () => maskLabel.style.display = 'hidden'
   }
 
   componentWillUnmount () {
@@ -85,6 +99,9 @@ export default class Illustration extends Component<IIllustrationProps> {
       {this.canvasRefs.map((r, i) => <canvas
         ref={r} key={i} width="224" height="224"
       />)}
+      <span className="illustration-mask" ref={this.maskRef}>
+        <span className="no-select" ref={this.maskLabelRef}>已阅读{this.props.lineCount}行</span>
+      </span>
     </p>
   }
 

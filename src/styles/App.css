@@ -20,8 +20,12 @@ body {
   position: absolute;
   width: 90%;
   height: 90%;
-  top: 5%;
-  left: 5%;
+  max-width: 800px;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate( -50%, -50%);
+  -ms-transform: translate( -50%, -50%);
+  transform: translate( -50%, -50%);
   border: red solid 2px;
   background-color: rgba(255, 255, 255, 0.1);
   filter: blur(10px);

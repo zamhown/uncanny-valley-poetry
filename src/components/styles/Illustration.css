@@ -4,10 +4,13 @@
     margin: 70px 0 !important;
 }
 
-.illustration-container canvas {
+.illustration-container canvas, .illustration-mask, .illustration-mask span {
+    display: block;
     position: absolute;
-    top: 0;
     left: 50%;
+    top: 0;
+    width: 224px;
+    height: 224px;
     -webkit-transform: translate( -50%, 0%);
     -ms-transform: translate( -50%, 0%);
     transform: translate( -50%, 0%);
@@ -15,4 +18,12 @@
 
 .illustration-container canvas:first-child {
     box-shadow: 0 0 8px #161616;
+}
+
+.illustration-mask span {
+    display: none;
+    color: white;
+    font-size: 12px;
+    line-height: 224px;
+    background-color: rgba(0, 0, 0, 0.5);
 }
