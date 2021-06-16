@@ -6,6 +6,8 @@ GitHub Pages: [点此链接](https://zamhown.github.io/uncanny-valley-poetry/)
 
 腾讯云版本（国内适用）: [点此链接](https://serverless-page-bucket-0m2wmngy-1253352899.cos-website.ap-hongkong.myqcloud.com/)
 
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
