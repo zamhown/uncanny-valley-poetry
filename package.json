@@ -83,8 +83,7 @@
     "train-poet": "python python/process_poet.py",
     "eval-poet": "python python/eval_poet.py",
     "update": "python python/update.py",
-    "update-img": "python python/update_img.py",
-    "poet": "node --loader ts-node/esm ./ts-scripts/eval.ts"
+    "update-img": "python python/update_img.py"
   },
   "eslintConfig": {
     "extends": [

@@ -1,4 +1,4 @@
-![语言恐怖谷效应产生器](assets/title.png)
+![语言恐怖谷效应产生器](https://raw.githubusercontent.com/zamhown/uncanny-valley-poetry/main/assets/title.png)
 
 - GitHub Pages: [点此链接](https://zamhown.github.io/uncanny-valley-poetry/)
 
