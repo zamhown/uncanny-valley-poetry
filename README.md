@@ -11,7 +11,7 @@ GitHub Pages: [点此链接](https://zamhown.github.io/uncanny-valley-poetry/)
 
 ## Setup
 
-本项目由一个React项目和一个Python3项目组成。Python项目用于语料库的预处理、训练以及插图的预处理，并生成参数文件和预处理后的插图素材，传递给React项目进行打包。
+本项目由一个React项目和一个Python3项目组成。Python项目用于语料库的预处理、训练以及插图的预处理，并在生成参数文件和插图素材后传递给React项目进行打包。
 
 在配置项目前需手动下载ILSVRC2012数据集：
 1. 在项目根目录的`python`目录下新建`img_datasets`文件夹
