@@ -1,7 +1,5 @@
 # 语言恐怖谷效应产生器
 
-一个纯前端实现的无限梦呓长诗生成器。
-
 - GitHub Pages: [点此链接](https://zamhown.github.io/uncanny-valley-poetry/)
 
 - 腾讯云版本（国内适用）: [点此链接](https://serverless-page-bucket-0m2wmngy-1253352899.cos-website.ap-hongkong.myqcloud.com/)
