@@ -2,11 +2,11 @@
 
 一个纯前端实现的无限梦呓长诗生成器。
 
-GitHub Pages: [点此链接](https://zamhown.github.io/uncanny-valley-poetry/)
+- GitHub Pages: [点此链接](https://zamhown.github.io/uncanny-valley-poetry/)
 
-腾讯云版本（国内适用）: [点此链接](https://serverless-page-bucket-0m2wmngy-1253352899.cos-website.ap-hongkong.myqcloud.com/)
+- 腾讯云版本（国内适用）: [点此链接](https://serverless-page-bucket-0m2wmngy-1253352899.cos-website.ap-hongkong.myqcloud.com/)
 
-项目背景及技术简介: [点此链接](https://www.zhihu.com/question/449596775/answer/1944375749)
+- 项目背景及技术简介: [点此链接](https://www.zhihu.com/question/449596775/answer/1944375749)
 
 
 ## 项目配置
@@ -38,7 +38,7 @@ npm run init
 语料库和超参数将直接影响长诗生成效果。
 
 
-## 使用
+## 项目使用
 
 在项目的根目录下可以选择性地运行以下命令：
 
