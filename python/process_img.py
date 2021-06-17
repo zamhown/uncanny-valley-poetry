@@ -62,6 +62,10 @@ def process_cam(net, img_path, class_id, output_dir):
 def process_img():
     print('生成插图中...')
 
+    if not os.path.exists(get_path('img_datasets/ILSVRC2012_img_val')) or not os.path.exists(get_path('img_datasets/caffe_ilsvrc12')):
+        print('生成插图跳过')
+        return
+
     net = get_net()
     word_img_map, img_class_map = get_word_img_map()
     print(list(word_img_map.keys()))

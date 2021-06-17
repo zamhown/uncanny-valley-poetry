@@ -5,6 +5,7 @@ text_datasets/other/
 
 # params
 params/*.pkl
+params/word_img_map.json
 imgs/
 test/
 

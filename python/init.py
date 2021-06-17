@@ -1,5 +1,7 @@
 import json
 import string
+import os
+
 from zhon.hanzi import punctuation as zh_punc
 import jieba
 
@@ -29,8 +31,11 @@ def get_imagenet_map():
 
 def init():
     print('初始化中...')
-    get_imagenet_map()
-    print('初始化完成')
+    if not os.path.exists(get_path('params/synsets.json')):
+        get_imagenet_map()
+        print('初始化完成')
+    else:
+        print('初始化跳过')
 
 
 if __name__ == '__main__':

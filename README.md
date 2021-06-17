@@ -1,4 +1,4 @@
-# 语言恐怖谷效应产生器
+![语言恐怖谷效应产生器](assets/title.png)
 
 - GitHub Pages: [点此链接](https://zamhown.github.io/uncanny-valley-poetry/)
 
@@ -11,12 +11,11 @@
 
 本项目由一个React项目和一个Python3项目组成。Python项目用于语料库的预处理、训练以及插图的预处理，并在生成参数文件和插图素材后传递给React项目进行打包。
 
-在配置项目前需手动下载ILSVRC2012数据集：
-1. 在项目根目录的`python`目录下新建`img_datasets`文件夹
-2. 下载ILSVRC2012_img_val.tar（[官方地址](http://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_img_val.tar)）
-3. 将ILSVRC2012_img_val.tar中的所有内容解压至`python/img_datasets/ILSVRC2012_img_val`路径下
-4. 下载标签文件包caffe_ilsvrc12.tar.gz（[官方地址](http://dl.caffe.berkeleyvision.org/caffe_ilsvrc12.tar.gz)）
-5. 将caffe_ilsvrc12.tar.gz中的所有内容解压至`python/img_datasets/caffe_ilsvrc12`路径下
+如果需要自动生成插图的功能，在配置项目前需手动下载ILSVRC2012数据集（推荐）：
+1. 下载ILSVRC2012_img_val.tar（[官方地址](http://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_img_val.tar)）
+2. 将ILSVRC2012_img_val.tar中的所有内容解压至`python/img_datasets/ILSVRC2012_img_val`路径下
+3. 下载标签文件包caffe_ilsvrc12.tar.gz（[官方地址](http://dl.caffe.berkeleyvision.org/caffe_ilsvrc12.tar.gz)）
+4. 将caffe_ilsvrc12.tar.gz中的所有内容解压至`python/img_datasets/caffe_ilsvrc12`路径下
 
 最后，在项目根目录下执行以下命令：
 ```shell

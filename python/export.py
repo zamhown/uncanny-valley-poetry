@@ -41,6 +41,10 @@ def transform(word_list, transfer_mat, sen_transfer_mat):
 def export_poet():
     print('导出诗歌参数中...')
 
+    if not os.path.exists(get_poet_params_path()):
+        print('导出诗歌参数跳过')
+        return
+
     with open(get_poet_params_path(), 'rb+') as file:
         params = pickle.load(file)
 
@@ -61,6 +65,10 @@ def export_poet():
 
 def export_img():
     print('导出插图中...')
+
+    if not os.path.exists(get_path('params/word_img_map.json')):
+        print('导出插图跳过')
+        return
 
     with open(get_path('params/word_img_map.json'), 'r', encoding='utf-8') as file:
         context = file.read()
