@@ -9,7 +9,7 @@ GitHub Pages: [点此链接](https://zamhown.github.io/uncanny-valley-poetry/)
 项目背景及技术简介: [点此链接](https://www.zhihu.com/question/449596775/answer/1944375749)
 
 
-## Setup
+## 项目配置
 
 本项目由一个React项目和一个Python3项目组成。Python项目用于语料库的预处理、训练以及插图的预处理，并在生成参数文件和插图素材后传递给React项目进行打包。
 
@@ -29,14 +29,16 @@ npm run init
 第一行会安装React项目的相关依赖，第二行则会自动安装Python项目的相关依赖并执行初始化脚本。
 
 
-## Datasets and Params
+## 语料库和超参数
 
 训练长诗所用的语料库位于`python/text_datasets`目录下。可以在这个目录下自行放置任意个`.txt`文件，在训练时都会自动加载。
 
 超参数配置文件位于`src/params/hyperParams.json`文件中，包含了θ、α、β三个超参数的声明（关于这些参数的介绍可见[这里](https://www.zhihu.com/question/449596775/answer/1944375749)）。
 
+语料库和超参数将直接影响长诗生成效果。
 
-## Usage
+
+## 使用
 
 在项目的根目录下可以选择性地运行以下命令：
 
