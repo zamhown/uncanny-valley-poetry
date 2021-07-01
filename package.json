@@ -106,6 +106,7 @@
   "devDependencies": {
     "@types/lodash": "^4.14.170",
     "@types/react-infinite-scroller": "^1.2.1",
+    "fontmin": "^0.9.8",
     "transfer-webpack-plugin": "^0.1.4"
   },
   "jest": {

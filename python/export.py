@@ -60,6 +60,13 @@ def export_poet():
     with open(get_path('../src/params/params.ts'), 'w', encoding='utf-8') as file:
         file.write(content)
 
+    char_list = list()
+    for w in word_list:
+        char_list += list(w.replace('\n', ''))
+    content = 'module.exports = "' + ''.join(set(char_list)) + '"'
+    with open(get_path('../scripts/words.js'), 'w', encoding='utf-8') as file:
+        file.write(content)
+
     print('诗歌参数导出完成')
 
 
