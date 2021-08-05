@@ -1,0 +1,10 @@
+.poetry p.line {
+    margin: 40px 0;
+    line-height: 18px;
+    height: 26px;
+}
+
+.poetry p.line span {
+    display: inline-block;
+    transition: 0.5s;
+}

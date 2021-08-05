@@ -1,3 +1,14 @@
+@font-face{
+    font-family: 'syst'; 
+    src: url('../../assets/syst.woff') format('woff');
+}
+
+p {
+    text-shadow:0px 0px 10px #880000;
+    font-family: 'syst';
+    letter-spacing: 2px;
+}
+
 .index-frame {
     position: absolute;
     width: 84%;

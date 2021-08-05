@@ -35,8 +35,8 @@ function hsv2rgb(h: number, s: number, v: number): [number, number, number] {
 
 export default class Illustration extends Component<IIllustrationProps> {
   canvasRefs: React.RefObject<HTMLCanvasElement>[]
-  maskRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
-  maskLabelRef: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
+  maskRef = React.createRef<HTMLDivElement>()
+  maskLabelRef = React.createRef<HTMLDivElement>()
   c2d: any[] = []
   imgObjList: HTMLImageElement[] = []
   mirror: boolean[] = []  // 是否翻转

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import Illustration from './Illustration'
+import PoemLine from './PoemLine'
 import Poet from '../utils/poet'
 import { randomSample } from '../utils/math'
 import { params } from '../params/params'
@@ -15,9 +16,11 @@ interface IPoetryProps {
 
 interface IPoetryState {
   poetry: string[]
+  shuffle: boolean
 }
 
 export default class Poetry extends Component<IPoetryProps, IPoetryState> {
+  frameRef = React.createRef<HTMLDivElement>()
   lastSenIndex: number | undefined
   poet: Poet = new Poet(params)
 
@@ -30,7 +33,8 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   illustrationWords: Set<string> = new Set()
 
   state = {
-    poetry: []
+    poetry: [],
+    shuffle: false
   }
 
   addPoetry(count: number) {
@@ -76,11 +80,18 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   }
 
   render() {
-    const poetry: any[] = []
-    this.state.poetry.forEach((s, i) => {
-      poetry.push(<p key={i}>{s}</p>)
+    const { poetry, shuffle } = this.state
+
+    const poem: any[] = []
+    poetry.forEach((s, i) => {
+      poem.push(<PoemLine
+        key={i}
+        frameRef={this.frameRef}
+        text={s}
+        shuffle={shuffle}
+      />)
       if (this.illustrations[i + 1]) {
-        poetry.push(<Illustration
+        poem.push(<Illustration
           key={'_' + i}
           imgList={this.illustrations[i + 1].imgList}
           wordList={this.illustrations[i + 1].wordList}
@@ -88,8 +99,14 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         />)
       }
     })
+
     return (
-      <div className="text-frame" style={{opacity: (this.props.show ?? 1) ? 1 : 0}}>
+      <div
+        ref={this.frameRef}
+        className="text-frame"
+        style={{opacity: (this.props.show ?? 1) ? 1 : 0}}
+        onDoubleClick={() => {this.setState({ shuffle: !shuffle })}}
+      >
         <InfiniteScroll
           loadMore={this.load.bind(this)}
           hasMore={true}
@@ -97,7 +114,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         >
           <div className="placeholder"></div>
           <div className="poetry">
-            {poetry}
+            {poem}
           </div>
         </InfiniteScroll>
       </div>
