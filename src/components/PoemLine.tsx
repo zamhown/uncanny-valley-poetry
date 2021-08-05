@@ -10,35 +10,43 @@ interface IPoemLineProps {
 }
 
 export default class PoemLine extends Component<IPoemLineProps> {
-  getSpanStyle(): CSSProperties {
+  pRef = React.createRef<HTMLParagraphElement>()
+  spanStyles: CSSProperties[] = []
+
+  getSpanStyle(index: number): CSSProperties {
     const { frameRef, shuffle } = this.props
-    if (shuffle && frameRef.current) {
+    if (shuffle) {
+      if (this.spanStyles[index]?.transform) return this.spanStyles[index]
+      if (!frameRef.current) return {} 
+
       const width = frameRef.current.clientWidth
       const height = frameRef.current.clientHeight
 
-      const fontsize = 10 + Math.random() * 20
       const rotate = Math.random() * 360
+      const scale = 0.5 + Math.random() * 1.5
       const xOffset = Math.random() * width - width / 2
       const yOffset = Math.random() * height -  height / 2
-      return {
-        fontSize: `${fontsize}px`,
-        transform: `translate(${xOffset}px, ${yOffset}px) rotate(${rotate}deg)`
+      const colorL = 27 + Math.random() * 73
+
+      const style = {
+        transform: `translate(${xOffset}px, ${yOffset}px) rotate(${rotate}deg) scale(${scale})`,
+        color: `hsl(0deg 100% ${colorL}%)`
       }
+      this.spanStyles[index] = style
     } else {
-      return {
-        fontSize: '18px'
-      }
+      this.spanStyles = this.spanStyles.map(() => ({}))
     }
+    return this.spanStyles[index]
   }
 
   render() {
     const { text, key } = this.props
     const spans = text.split('').map((c, i) => (
-      <span key={i} style={this.getSpanStyle()}>{c}</span>
+      <span key={i} style={this.getSpanStyle(i)}>{c}</span>
     ))
 
     return (
-      <p className="line" key={key}>{spans}</p>
+      <p ref={this.pRef} className="line" key={key}>{spans}</p>
     )
   }
 }

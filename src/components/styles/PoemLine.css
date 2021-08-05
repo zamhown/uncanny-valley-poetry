@@ -1,6 +1,7 @@
 .poetry p.line {
     margin: 40px 0;
     line-height: 18px;
+    font-size: 18px;
     height: 26px;
 }
 

@@ -16,7 +16,8 @@ interface IPoetryProps {
 
 interface IPoetryState {
   poetry: string[]
-  shuffle: boolean
+  shuffleStates: boolean[]
+  shuffleMode: boolean
 }
 
 export default class Poetry extends Component<IPoetryProps, IPoetryState> {
@@ -32,9 +33,13 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   } = {}
   illustrationWords: Set<string> = new Set()
 
-  state = {
+  poemLineRefs: React.RefObject<PoemLine>[] = []
+  poemScrollTop: number = 0
+
+  state: IPoetryState = {
     poetry: [],
-    shuffle: false
+    shuffleStates: [],
+    shuffleMode: false
   }
 
   addPoetry(count: number) {
@@ -68,10 +73,74 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   }
 
   load() {
-    const { poetry } = this.state
+    const { poetry, shuffleStates } = this.state
     const newPoetry = this.addPoetry(20)
+    const newShuffleStates = newPoetry.map(() => false)
+    const newPoemLineRefs = newPoetry.map(() => React.createRef<PoemLine>())
+
+    this.poemLineRefs = [
+      ...this.poemLineRefs,
+      ...newPoemLineRefs
+    ]
     this.setState({
-      poetry: [...poetry, ...newPoetry]
+      poetry: [...poetry, ...newPoetry],
+      shuffleStates: [...shuffleStates, ...newShuffleStates],
+    })
+  }
+
+  get lastDisplayedLineIndex(): number {
+    const frame = this.frameRef.current
+    let lastI = 0
+    if (frame) {
+      for (let i = 0; i < this.poemLineRefs.length; i++) {
+        const p = this.poemLineRefs[i].current?.pRef.current
+        if (p && p.offsetTop > frame.clientHeight + this.poemScrollTop) {
+          lastI = Math.max(i - 1, 0)
+          break
+        }
+      }
+    }
+    return lastI
+  }
+
+  updateShuffleStates(shuffleNum: number): boolean[] {
+    const { poetry } = this.state
+    const shuffleStates: boolean[] = []
+    const tmp = Math.max(Math.min(shuffleNum, poetry.length), 0)
+    for (let i = 0; i < tmp; i++) shuffleStates.push(true)
+    for (let i = tmp; i < poetry.length; i++) shuffleStates.push(false)
+    return shuffleStates
+  }
+
+  handleScroll(ev: any) {
+    this.poemScrollTop = ev.target.scrollTop
+    const { shuffleMode, shuffleStates } = this.state
+    if (shuffleMode) {
+      const lastI = this.lastDisplayedLineIndex
+      let flag = false
+      const newShuffleStates = this.updateShuffleStates(lastI).map(
+        (b, i) => {
+          const state = b || shuffleStates[i]
+          if (state !== shuffleStates[i]) flag = true
+          return state
+        }
+      )
+      if (flag) {
+        this.setState({
+          shuffleStates: newShuffleStates
+        })
+      }
+    }
+  }
+
+  handleDoubleClick() {
+    const { shuffleMode, poetry } = this.state
+    const shuffleStates = shuffleMode
+      ? this.updateShuffleStates(poetry.length)
+      : this.updateShuffleStates(this.lastDisplayedLineIndex + 1)
+    this.setState({
+      shuffleMode: !shuffleMode,
+      shuffleStates
     })
   }
 
@@ -80,15 +149,16 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   }
 
   render() {
-    const { poetry, shuffle } = this.state
+    const { poetry, shuffleMode, shuffleStates } = this.state
 
     const poem: any[] = []
     poetry.forEach((s, i) => {
       poem.push(<PoemLine
+        ref={this.poemLineRefs[i]}
         key={i}
         frameRef={this.frameRef}
         text={s}
-        shuffle={shuffle}
+        shuffle={shuffleMode && shuffleStates[i]}
       />)
       if (this.illustrations[i + 1]) {
         poem.push(<Illustration
@@ -105,12 +175,14 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         ref={this.frameRef}
         className="text-frame"
         style={{opacity: (this.props.show ?? 1) ? 1 : 0}}
-        onDoubleClick={() => {this.setState({ shuffle: !shuffle })}}
+        onDoubleClick={this.handleDoubleClick.bind(this)}
+        onScroll={this.handleScroll.bind(this)}
       >
         <InfiniteScroll
           loadMore={this.load.bind(this)}
           hasMore={true}
           useWindow={false}
+          style={{ width: '100%' }}
         >
           <div className="placeholder"></div>
           <div className="poetry">
