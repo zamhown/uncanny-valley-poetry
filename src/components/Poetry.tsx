@@ -192,12 +192,10 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     // 重构 + 映射
     const shuffledCharBoxes = shuffledCharsIndexList.map(charIndex => {
       const span = this.poemLineRefs[charIndex[0]].current!.spanRefs[charIndex[1]].current!
-      const p = this.poemLineRefs[charIndex[0]].current!.pRef.current!
       return {
-        top: p.offsetTop,
+        top: span.offsetTop,
         left: span.offsetLeft,
-        width: span.offsetWidth,
-        height: span.offsetHeight
+        width: span.offsetWidth
       }
     })
     let charPtr = 0
