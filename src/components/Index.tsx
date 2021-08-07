@@ -42,8 +42,8 @@ export default class Index extends Component<IIndexProps> {
           <p className="loading">loading...</p>
           <p style={{height: 10, margin: 0}}></p>
           <p className="readme readme-1">
-            <span>无限插图</span>
-            <span>无限长诗</span>
+            <span>无限下拉</span>
+            <span>浏览长诗</span>
           </p>
           <p className="readme readme-2">
             <span>双击屏幕</span>

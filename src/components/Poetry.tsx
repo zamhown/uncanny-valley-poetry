@@ -39,6 +39,9 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   poemScrollTop: number = 0
 
   refreshing: boolean = false
+  plannedCharsIndexSet: Set<string> = new Set()
+  refreshedCharsIndexSet: Set<string> = new Set()
+  newPoetry: string[] | undefined
 
   state: IPoetryState = {
     poetry: [],
@@ -119,7 +122,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     return shuffleStates
   }
 
-  getNewSpanLocations(): Partial<IPoetryState> {
+  getNewSpanLocations() {
     const { shuffleStates, poetry } = this.state
     const spanLocationsList: SpanLocation[][] = []
 
@@ -229,7 +232,8 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     })
     return {
       spanLocationsList,
-      poetry: newPoetry
+      poetry: newPoetry,
+      charsIndexList
     }
   }
 
@@ -278,24 +282,36 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
       shuffleStates: newShuffleStates
     }
     if (shuffleMode) {
-      const { spanLocationsList, poetry } = this.getNewSpanLocations()
+      const { spanLocationsList, poetry, charsIndexList } = this.getNewSpanLocations()
       this.refreshing = true
+      this.plannedCharsIndexSet = new Set(charsIndexList.map(t => `${t[0]}-${t[1]}`))
+      this.refreshedCharsIndexSet = new Set()
+      this.newPoetry = poetry
       this.setState({
         ...newState,
-        spanLocationsList: spanLocationsList!
+        spanLocationsList: spanLocationsList
       })
-      setTimeout(() => {
-        this.setState({
-          poetry: poetry!,
-          spanLocationsList: []
-        })
-        this.refreshing = false
-      }, 500);
     } else {
       this.setState({
         ...newState,
         spanLocationsList: []
       })
+    }
+  }
+
+  handleSpanTransitionEnd = (i: number) => (j: number) => () => {
+    if (this.refreshing) {
+      const charIndex = `${i}-${j}`
+      if (this.plannedCharsIndexSet.has(charIndex)) this.refreshedCharsIndexSet.add(charIndex)
+      if (this.refreshedCharsIndexSet.size === this.plannedCharsIndexSet.size) {
+        this.refreshing = false
+        if (this.newPoetry) {
+          this.setState({
+            poetry: this.newPoetry,
+            spanLocationsList: []
+          })
+        }
+      }
     }
   }
 
@@ -315,6 +331,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         text={s}
         shuffle={shuffleMode && shuffleStates[i]}
         spanLocations={spanLocationsList[i] ?? []}
+        onTransitionEnd={this.refreshing ? this.handleSpanTransitionEnd(i) : undefined}
       />)
       if (this.illustrations[i + 1]) {
         poem.push(<Illustration

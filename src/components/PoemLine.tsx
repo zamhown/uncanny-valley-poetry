@@ -9,6 +9,7 @@ interface IPoemLineProps {
   frameRef: React.RefObject<HTMLDivElement>
   spanLocations: SpanLocation[]
   shuffle?: boolean
+  onTransitionEnd?: any
 }
 
 export default class PoemLine extends Component<IPoemLineProps> {
@@ -92,10 +93,17 @@ export default class PoemLine extends Component<IPoemLineProps> {
   }
 
   render() {
-    const { text } = this.props
+    const { text, onTransitionEnd } = this.props
 
     const spans = text.split('').map((c, i) => (
-      <span key={i} ref={this.spanRefs[i]} style={this.getSpanStyle(i)}>{c}</span>
+      <span
+        key={i}
+        ref={this.spanRefs[i]}
+        style={this.getSpanStyle(i)}
+        onTransitionEnd={onTransitionEnd ? onTransitionEnd(i) : undefined}
+      >
+        {c}
+      </span>
     ))
     this.refreshing = false
 
