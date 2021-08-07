@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import Illustration from './Illustration'
-import PoemLine, { SpanLocations } from './PoemLine'
+import PoemLine, { SpanLocation } from './PoemLine'
 import Poet from '../utils/poet'
 import { randomSample } from '../utils/math'
 import { params } from '../params/params'
@@ -19,7 +19,7 @@ interface IPoetryState {
   poetry: string[]
   shuffleStates: boolean[]
   shuffleMode: boolean
-  spanLocationsList: SpanLocations[]
+  spanLocationsList: SpanLocation[][]
 }
 
 export default class Poetry extends Component<IPoetryProps, IPoetryState> {
@@ -37,6 +37,8 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
 
   poemLineRefs: React.RefObject<PoemLine>[] = []
   poemScrollTop: number = 0
+
+  refreshing: boolean = false
 
   state: IPoetryState = {
     poetry: [],
@@ -87,7 +89,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     ]
     this.setState({
       poetry: [...poetry, ...newPoetry],
-      shuffleStates: [...shuffleStates, ...newShuffleStates],
+      shuffleStates: [...shuffleStates, ...newShuffleStates]
     })
   }
 
@@ -117,17 +119,19 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     return shuffleStates
   }
 
-  getNewSpanLocationsList() {
+  getNewSpanLocations(): Partial<IPoetryState> {
     const { shuffleStates, poetry } = this.state
-    const spanLocationsList: SpanLocations[] = []
+    const spanLocationsList: SpanLocation[][] = []
 
     const processLineIndexList: number[] = []
     const charsIndexList: [number, number][] = []
+    const chars: string[] = []
     shuffleStates.forEach((b, i) => {
       if (b) {
         processLineIndexList.push(i)
         spanLocationsList[i] = []
         const newChars = poetry[i].split('')
+        chars.push(...newChars)
         charsIndexList.push(...newChars.map((c, j) => [i, j] as [number, number]))
       }
     })
@@ -166,8 +170,9 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
       }
       return newIndexList
     }
-    const shuffledCharsIndexList = shuffleIndexes(0, charsIndexList.length)
-      .map(i => charsIndexList[i])
+    const shuffledCharSort = shuffleIndexes(0, charsIndexList.length)
+    const shuffledCharsIndexList = shuffledCharSort.map(i => charsIndexList[i])
+    const shuffledChars = shuffledCharSort.map(i => chars[i])
 
     // 分句
     let senCount = processLineIndexList.length
@@ -198,14 +203,14 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         width: span.offsetWidth
       }
     })
+    const newPoetry: string[] = [...poetry]
     let charPtr = 0
     processLineIndexList.forEach((i, senPtr) => {
       const len = newSenLength[senPtr]
-      let lineWidth = -2
+      let lineWidth = 0
       const newLeft: number[] = []
       for (let j = 0; j < len; j++) {
         const charBox = shuffledCharBoxes[charPtr + j]
-        lineWidth += 2
         newLeft.push(lineWidth)
         lineWidth += charBox.width
       }
@@ -219,9 +224,13 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
           translateY: p.offsetTop - charBox.top
         }
       }
+      newPoetry[i] = shuffledChars.slice(charPtr, charPtr + len).join('')
       charPtr += len
     })
-    return spanLocationsList
+    return {
+      spanLocationsList,
+      poetry: newPoetry
+    }
   }
 
   handleScroll(ev: any) {
@@ -253,6 +262,8 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   }
 
   handleDoubleClick() {
+    if (this.refreshing) return
+
     const { shuffleMode, poetry } = this.state
     const [firstI, lastI] = this.displayedLineRange
     const newShuffleStates = shuffleMode
@@ -262,13 +273,30 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         lastI,
       )
 
-    this.setState({
+    const newState = {
       shuffleMode: !shuffleMode,
-      shuffleStates: newShuffleStates,
-      spanLocationsList: shuffleMode
-        ? this.getNewSpanLocationsList()
-        : []
-    })
+      shuffleStates: newShuffleStates
+    }
+    if (shuffleMode) {
+      const { spanLocationsList, poetry } = this.getNewSpanLocations()
+      this.refreshing = true
+      this.setState({
+        ...newState,
+        spanLocationsList: spanLocationsList!
+      })
+      setTimeout(() => {
+        this.setState({
+          poetry: poetry!,
+          spanLocationsList: []
+        })
+        this.refreshing = false
+      }, 500);
+    } else {
+      this.setState({
+        ...newState,
+        spanLocationsList: []
+      })
+    }
   }
 
   componentWillMount(){
@@ -312,8 +340,8 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
           hasMore={true}
           useWindow={false}
         >
-          <div className="placeholder content"></div>
-          <div className="poetry content">
+          <div className="placeholder"></div>
+          <div className="poetry">
             {poem}
           </div>
         </InfiniteScroll>
