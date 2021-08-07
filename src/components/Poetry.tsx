@@ -257,7 +257,10 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     const [firstI, lastI] = this.displayedLineRange
     const newShuffleStates = shuffleMode
       ? poetry.map(() => false)
-      : this.updateShuffleStates(firstI, lastI)
+      : this.updateShuffleStates(
+        Math.max(firstI - 1, 0),  // 减1防止上一行露半截
+        lastI,
+      )
 
     this.setState({
       shuffleMode: !shuffleMode,
