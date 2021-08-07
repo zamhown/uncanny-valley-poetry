@@ -3,10 +3,9 @@ import React, { Component } from 'react'
 import './styles/Illustration.css'
 
 interface IIllustrationProps {
-  wordList: string[],
-  imgList: string[],
-  lineCount: number,
-  key?: any
+  wordList: string[]
+  imgList: string[]
+  lineCount: number
 }
 
 const imgDir = 'static/media/illustration/'
@@ -69,16 +68,14 @@ export default class Illustration extends Component<IIllustrationProps> {
 
     window.addEventListener('scroll', this.handleScroll.bind(this), true)
 
-    const mask = this.maskRef.current!
     const maskLabel = this.maskLabelRef.current!
-    mask.onclick = () => {
-      if (maskLabel.style.display === 'block') {
-        maskLabel.style.display = 'none'
+    maskLabel.onclick = () => {
+      if (maskLabel.style.opacity === '1') {
+        maskLabel.style.opacity = '0'
       } else {
-        maskLabel.style.display = 'block'
+        maskLabel.style.opacity = '1'
       }
     }
-    maskLabel.onclick = () => maskLabel.style.display = 'hidden'
   }
 
   componentWillUnmount () {

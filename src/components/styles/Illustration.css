@@ -21,7 +21,8 @@
 }
 
 .illustration-mask span {
-    display: none;
+    opacity: 0;
+    transition: 0.3s;
     color: white;
     font-size: 12px;
     line-height: 224px;

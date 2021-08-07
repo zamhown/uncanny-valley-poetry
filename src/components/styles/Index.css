@@ -4,7 +4,7 @@
 }
 
 p {
-    text-shadow:0px 0px 10px #880000;
+    text-shadow: 0px 0px 10px #880000;
     font-family: 'syst';
     letter-spacing: 2px;
 }
@@ -21,6 +21,25 @@ p {
     overflow: hidden;
 }
 
+.index-bg {
+    position: absolute;
+    width: 600px;
+    height: 240px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 0.5px solid #888888;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.05);
+    filter: blur(2px);
+}
+
+@media screen and (max-width: 720px) {
+    .index-bg {
+        width: 94%;
+    }
+}
+
 .index {
     position: absolute;
     width: 100%;
@@ -35,16 +54,31 @@ p {
 }
 
 .loading {
-    margin-top: 0px;
-    color: #888888;
+    margin-top: 0;
     font-size: 12px;
-    margin-top: -10px;
+    color: #888888;
+}
+
+.readme {
+    font-family: 'Courier New', Courier, monospace;
+    text-shadow: none;
+    font-size: 10px;
+    color: #555555;
+}
+
+.readme span:first-child {
+    display: inline-block;
+    padding-right: 5px;
+    transform: rotate(-8deg);
+}
+
+.readme span:last-child {
+    display: inline-block;
+    padding-left: 5px;
+    transform: rotate(8deg);
 }
 
 @keyframes loading {
     from { filter: blur(0px) }
-    to {
-        filter: blur(5px);
-        transition: all 1s;
-    }
+    to { filter: blur(5px) }
 }
