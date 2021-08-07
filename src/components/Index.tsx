@@ -41,15 +41,15 @@ export default class Index extends Component<IIndexProps> {
           <img className="title" src={title} alt="语言恐怖谷效应生成器"/>
           <p className="loading">loading...</p>
           <p style={{height: 10, margin: 0}}></p>
-          <p className="readme">
+          <p className="readme readme-1">
             <span>无限插图</span>
             <span>无限长诗</span>
           </p>
-          <p className="readme">
+          <p className="readme readme-2">
             <span>双击屏幕</span>
             <span>打乱文字</span>
           </p>
-          <p className="readme">
+          <p className="readme readme-3">
             <span>再次双击</span>
             <span>重组文字</span>
           </p>

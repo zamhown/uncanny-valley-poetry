@@ -56,7 +56,8 @@ p {
 .loading {
     margin-top: 0;
     font-size: 12px;
-    color: #888888;
+    color: #666666;
+    text-shadow: none;
 }
 
 .readme {
@@ -64,6 +65,19 @@ p {
     text-shadow: none;
     font-size: 10px;
     color: #555555;
+    animation: readme 0.9s infinite linear alternate;
+}
+
+.readme-1 {
+    animation-delay: 0s;
+}
+
+.readme-2 {
+    animation-delay: 0.3s;
+}
+
+.readme-3 {
+    animation-delay: 0.6s;
 }
 
 .readme span:first-child {
@@ -81,4 +95,10 @@ p {
 @keyframes loading {
     from { filter: blur(0px) }
     to { filter: blur(5px) }
+}
+
+@keyframes readme {
+    0%   { opacity: 1 }
+    50%  { opacity: 0.7 }
+    100% { opacity: 0.4 }
 }

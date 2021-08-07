@@ -304,13 +304,13 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         onScroll={this.handleScroll.bind(this)}
       >
         <InfiniteScroll
+          className="content"
           loadMore={this.load.bind(this)}
           hasMore={true}
           useWindow={false}
-          style={{ width: '100%' }}
         >
-          <div className="placeholder"></div>
-          <div className="poetry">
+          <div className="placeholder content"></div>
+          <div className="poetry content">
             {poem}
           </div>
         </InfiniteScroll>
