@@ -22,6 +22,7 @@ interface IPoetryState {
   shuffleStates: boolean[]
   shuffleMode: boolean
   spanLocationsList: SpanLocation[][]
+  illustrationZIndex?: number
 }
 
 export default class Poetry extends Component<IPoetryProps, IPoetryState> {
@@ -101,13 +102,14 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     }
 
     // 匀诗
-    const retainWords = poetLimited.limitedWords
+    const bufferWords = [...poetLimited.limitedWords]
     const oldSenLen = poetry.length
+    const MAX_SEN_LEN = 16
     if (oldSenLen < count) {
       for (let i = oldSenLen; i < count; i++) {
         let wordId = -1
-        if (retainWords.length) {
-          wordId = retainWords.pop()!
+        if (bufferWords.length) {
+          wordId = bufferWords.pop()!
         } else {
           let maxLen = 0
           let maxi = 0
@@ -126,17 +128,30 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         })
       }
     }
-    while (retainWords.length > 0) {
-      if (oldSenLen < count) {
+    // 禁止过长的行出现
+    poetry.forEach(l => {
+      while (l.string.length > MAX_SEN_LEN) {
+        const wordId = l.indexes.pop()!
+        bufferWords.push(wordId)
+        l.string = l.indexes.map(id => params.wordList[id]).join('')
+      }
+    })
+    // 贴补剩余词
+    let flag = true
+    while (bufferWords.length > 0) {
+      if (oldSenLen < count && flag) {
+        const oldBufferWordsLength = bufferWords.length
         for (let i = oldSenLen; i < count; i++) {
-          if (retainWords.length) {
-            const wordId = retainWords.pop()!
+          if (poetry[i].string.length > MAX_SEN_LEN) continue
+          if (bufferWords.length) {
+            const wordId = bufferWords.pop()!
             poetry[i].string += params.wordList[wordId]
             poetry[i].indexes.push(wordId)
           } else break
         }
+        if (bufferWords.length === oldBufferWordsLength) flag = false
       } else {
-        const wordId = retainWords.pop()!
+        const wordId = bufferWords.pop()!
         let minLen = Infinity
         let mini = 0
         poetry.forEach((l, i) => {
@@ -333,7 +348,8 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     } else {
       this.setState({
         ...newState,
-        spanLocationsList: []
+        spanLocationsList: [],
+        illustrationZIndex: -1
       })
     }
   }
@@ -347,7 +363,8 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         if (this.newPoetry) {
           this.setState({
             poetry: this.newPoetry,
-            spanLocationsList: []
+            spanLocationsList: [],
+            illustrationZIndex: 0
           })
         }
       }
@@ -359,7 +376,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   }
 
   render() {
-    const { poetry, shuffleMode, shuffleStates, spanLocationsList } = this.state
+    const { poetry, shuffleMode, shuffleStates, spanLocationsList, illustrationZIndex } = this.state
 
     const poem: any[] = []
     poetry.forEach((l, i) => {
@@ -378,6 +395,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
           imgList={this.illustrations[i + 1].imgList}
           wordList={this.illustrations[i + 1].wordList}
           lineCount={i + 1}
+          zIndex={illustrationZIndex}
         />)
       }
     })

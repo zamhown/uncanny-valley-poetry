@@ -1,24 +1,28 @@
 .illustration-container {
     position: relative;
-    height: 224px;
     margin: 70px 0 !important;
-    z-index: -1;
 }
 
-.illustration-container canvas, .illustration-mask, .illustration-mask span {
-    display: block;
+.illustration-container > div {
+    width: fit-content;
     position: absolute;
     left: 50%;
     top: 0;
-    width: 224px;
-    height: 224px;
-    -webkit-transform: translate( -50%, 0%);
-    -ms-transform: translate( -50%, 0%);
     transform: translate( -50%, 0%);
 }
 
-.illustration-container canvas:first-child {
-    box-shadow: 0 0 8px #161616;
+.illustration-container canvas.layer, .illustration-mask, .illustration-mask span {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.illustration-container canvas.img {
+    display: block;
+    position: relative;
+    transition: 0.3s;
+    box-shadow: 0 0 5px black;
 }
 
 .illustration-mask span {
@@ -26,6 +30,5 @@
     transition: 0.3s;
     color: white;
     font-size: 12px;
-    line-height: 224px;
     background-color: rgba(0, 0, 0, 0.5);
 }

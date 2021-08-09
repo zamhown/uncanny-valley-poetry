@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/uncanny-valley-poetry/static/css/main.1dccbce1.chunk.css",
-    "main.js": "/uncanny-valley-poetry/static/js/main.f99b5cf4.chunk.js",
-    "main.js.map": "/uncanny-valley-poetry/static/js/main.f99b5cf4.chunk.js.map",
+    "main.css": "/uncanny-valley-poetry/static/css/main.1ee5e604.chunk.css",
+    "main.js": "/uncanny-valley-poetry/static/js/main.d22baae8.chunk.js",
+    "main.js.map": "/uncanny-valley-poetry/static/js/main.d22baae8.chunk.js.map",
     "runtime-main.js": "/uncanny-valley-poetry/static/js/runtime-main.b807a9e5.js",
     "runtime-main.js.map": "/uncanny-valley-poetry/static/js/runtime-main.b807a9e5.js.map",
-    "static/js/2.a30ee19a.chunk.js": "/uncanny-valley-poetry/static/js/2.a30ee19a.chunk.js",
-    "static/js/2.a30ee19a.chunk.js.map": "/uncanny-valley-poetry/static/js/2.a30ee19a.chunk.js.map",
+    "static/js/2.3f04a028.chunk.js": "/uncanny-valley-poetry/static/js/2.3f04a028.chunk.js",
+    "static/js/2.3f04a028.chunk.js.map": "/uncanny-valley-poetry/static/js/2.3f04a028.chunk.js.map",
     "static/js/3.7d073761.chunk.js": "/uncanny-valley-poetry/static/js/3.7d073761.chunk.js",
     "static/js/3.7d073761.chunk.js.map": "/uncanny-valley-poetry/static/js/3.7d073761.chunk.js.map",
     "index.html": "/uncanny-valley-poetry/index.html",
-    "static/css/main.1dccbce1.chunk.css.map": "/uncanny-valley-poetry/static/css/main.1dccbce1.chunk.css.map",
-    "static/js/2.a30ee19a.chunk.js.LICENSE.txt": "/uncanny-valley-poetry/static/js/2.a30ee19a.chunk.js.LICENSE.txt",
+    "static/css/main.1ee5e604.chunk.css.map": "/uncanny-valley-poetry/static/css/main.1ee5e604.chunk.css.map",
+    "static/js/2.3f04a028.chunk.js.LICENSE.txt": "/uncanny-valley-poetry/static/js/2.3f04a028.chunk.js.LICENSE.txt",
     "static/media/Index.css": "/uncanny-valley-poetry/static/media/syst.404dd71c.woff",
     "static/media/title.c4b61619.png": "/uncanny-valley-poetry/static/media/title.c4b61619.png",
     "static/media/illustration/10090.jpg": "/uncanny-valley-poetry/static/media/illustration/10090.jpg",
@@ -785,8 +785,8 @@
   },
   "entrypoints": [
     "static/js/runtime-main.b807a9e5.js",
-    "static/js/2.a30ee19a.chunk.js",
-    "static/css/main.1dccbce1.chunk.css",
-    "static/js/main.f99b5cf4.chunk.js"
+    "static/js/2.3f04a028.chunk.js",
+    "static/css/main.1ee5e604.chunk.css",
+    "static/js/main.d22baae8.chunk.js"
   ]
 }
