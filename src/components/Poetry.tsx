@@ -4,19 +4,21 @@ import InfiniteScroll from 'react-infinite-scroller'
 import Illustration from './Illustration'
 import PoemLine, { SpanLocation } from './PoemLine'
 import Poet from '../utils/poet'
+import PoetLimited from '../utils/poetLimited'
 import { randomSample } from '../utils/math'
 import { params } from '../params/params'
 import { wordImgMap } from '../params/wordImgMap'
 
 import './styles/Poetry.css'
 
+type Line = {string: string, indexes: number[]}
 
 interface IPoetryProps {
   show?: boolean
 }
 
 interface IPoetryState {
-  poetry: string[]
+  poetry: Line[]
   shuffleStates: boolean[]
   shuffleMode: boolean
   spanLocationsList: SpanLocation[][]
@@ -41,7 +43,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   refreshing: boolean = false
   plannedCharsIndexSet: Set<string> = new Set()
   refreshedCharsIndexSet: Set<string> = new Set()
-  newPoetry: string[] | undefined
+  newPoetry: Line[] | undefined
 
   state: IPoetryState = {
     poetry: [],
@@ -51,10 +53,13 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
   }
 
   addPoetry(count: number) {
-    const poetry = []
+    const poetry: Line[] = []
     for (let i = 0; i < count; i++) {
       const sen = this.poet.getSentence()
-      poetry.push(sen.string.trim())
+      poetry.push({
+        string: sen.string,
+        indexes: sen.wordIndexes
+      })
       // 插图
       for (const w of sen.words) {
         if (wordImgMap[w])
@@ -78,6 +83,75 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     }
 
     return poetry
+  }
+
+  changePoetry(limitedWords: number[], count: number) {
+    const poetLimited = new PoetLimited(params, limitedWords)
+    const poetry: Line[] = []
+    for (let i = 0; i < count; i++) {
+      const sen = poetLimited.getSentence()
+      if (sen) {
+        poetry.push({
+          string: sen.string,
+          indexes: sen.wordIndexes
+        })
+      } else {
+        break
+      }
+    }
+
+    // 匀诗
+    const retainWords = poetLimited.limitedWords
+    const oldSenLen = poetry.length
+    if (oldSenLen < count) {
+      for (let i = oldSenLen; i < count; i++) {
+        let wordId = -1
+        if (retainWords.length) {
+          wordId = retainWords.pop()!
+        } else {
+          let maxLen = 0
+          let maxi = 0
+          poetry.forEach((l, i) => {
+            if (l.indexes.length > maxLen) {
+              maxLen = l.indexes.length
+              maxi = i
+            }
+          })
+          wordId = poetry[maxi].indexes.pop()!
+          poetry[maxi].string = poetry[maxi].indexes.map(id => params.wordList[id]).join('')
+        }
+        poetry.push({
+          string: params.wordList[wordId],
+          indexes: [wordId]
+        })
+      }
+    }
+    while (retainWords.length > 0) {
+      if (oldSenLen < count) {
+        for (let i = oldSenLen; i < count; i++) {
+          if (retainWords.length) {
+            const wordId = retainWords.pop()!
+            poetry[i].string += params.wordList[wordId]
+            poetry[i].indexes.push(wordId)
+          } else break
+        }
+      } else {
+        const wordId = retainWords.pop()!
+        let minLen = Infinity
+        let mini = 0
+        poetry.forEach((l, i) => {
+          if (l.indexes.length < minLen) {
+            minLen = l.indexes.length
+            mini = i
+          }
+        })
+        poetry[mini].string += params.wordList[wordId]
+        poetry[mini].indexes.push(wordId)
+      }
+    }
+
+    // 对行进行重排
+    return randomSample(poetry, poetry.length)
   }
 
   load() {
@@ -129,72 +203,37 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     const processLineIndexList: number[] = []
     const charsIndexList: [number, number][] = []
     const chars: string[] = []
+    const wordIndexes: number[] = []
     shuffleStates.forEach((b, i) => {
       if (b) {
         processLineIndexList.push(i)
         spanLocationsList[i] = []
-        const newChars = poetry[i].split('')
+        const newChars = poetry[i].string.split('')
         chars.push(...newChars)
         charsIndexList.push(...newChars.map((c, j) => [i, j] as [number, number]))
+        wordIndexes.push(...poetry[i].indexes)
       }
     })
 
-    // 二分法对一段连续数字重排列
-    const shuffleIndexes = (start: number, count: number) => {
-      const newIndexList: number[] = []
-      const queue: [number, number][] = [
-        [start, count]
-      ]
-      let head = 0, tail = 0
-      while (head <= tail) {
-        const [s, c] = queue[head]
-        const num = s + Math.floor(Math.random() * c)
-        newIndexList.push(num)
+    const changedPoetry = this.changePoetry(wordIndexes, processLineIndexList.length)
 
-        const leaves: [number, number][] = []
-        if (num - s > 0) {
-          leaves.push([s, num - s])
-        }
-        if (s + c - num - 1 > 0) {
-          leaves.push([num + 1, s + c - num - 1])
-        }
-
-        if (leaves.length === 1) {
-          queue.push(leaves[0])
-        } else if (leaves.length === 2) {
-          if (Math.random() < 0.5) {
-            queue.push(leaves[0], leaves[1])
-          } else {
-            queue.push(leaves[1], leaves[0])
+    // 对号入座
+    const shuffledCharIdSet = new Set<number>()
+    const shuffledCharsIndexList: [number, number][] = []
+    const newSenLength: number[] = []
+    const newCharsIndexList: [number, number][] = []
+    changedPoetry.forEach((l, ptr) => {
+      newSenLength.push(l.string.length)
+      for (let j = 0; j < l.string.length; j++) {
+        newCharsIndexList.push([processLineIndexList[ptr], j])
+        for (let k = 0; k < chars.length; k++) {
+          if (chars[k] === l.string[j] && !shuffledCharIdSet.has(k)) {
+            shuffledCharIdSet.add(k)
+            shuffledCharsIndexList.push(charsIndexList[k])
+            break
           }
         }
-        head++
-        tail += leaves.length
       }
-      return newIndexList
-    }
-    const shuffledCharSort = shuffleIndexes(0, charsIndexList.length)
-    const shuffledCharsIndexList = shuffledCharSort.map(i => charsIndexList[i])
-    const shuffledChars = shuffledCharSort.map(i => chars[i])
-
-    // 分句
-    let senCount = processLineIndexList.length
-    let charCount = charsIndexList.length
-    let newSenLength: number[] = []
-    let newCharsIndexList: [number, number][] = []
-    const MIN_LINE_LEN = 1
-    const MAX_LINE_LEN = 16
-    processLineIndexList.forEach(() => {
-      senCount--
-      const min = Math.max(MIN_LINE_LEN, charCount - senCount * MAX_LINE_LEN)
-      const max = Math.min(MAX_LINE_LEN, charCount - senCount * MIN_LINE_LEN)
-      const len = min + Math.floor(Math.random() * (max - min + 1))
-      newSenLength.push(len)
-      charCount -= len
-    })
-    newSenLength = shuffleIndexes(0, newSenLength.length).map(i => newSenLength[i])  // 语句顺序重排
-    processLineIndexList.forEach((i, ptr) => {
-      for (let j = 0; j < newSenLength[ptr]; j++) newCharsIndexList.push([i, j])
     })
 
     // 重构 + 映射
@@ -206,7 +245,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
         width: span.offsetWidth
       }
     })
-    const newPoetry: string[] = [...poetry]
+    const newPoetry: Line[] = [...poetry]
     let charPtr = 0
     processLineIndexList.forEach((i, senPtr) => {
       const len = newSenLength[senPtr]
@@ -227,7 +266,7 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
           translateY: p.offsetTop - charBox.top
         }
       }
-      newPoetry[i] = shuffledChars.slice(charPtr, charPtr + len).join('')
+      newPoetry[i] = changedPoetry[senPtr]
       charPtr += len
     })
     return {
@@ -323,12 +362,12 @@ export default class Poetry extends Component<IPoetryProps, IPoetryState> {
     const { poetry, shuffleMode, shuffleStates, spanLocationsList } = this.state
 
     const poem: any[] = []
-    poetry.forEach((s, i) => {
+    poetry.forEach((l, i) => {
       poem.push(<PoemLine
         ref={this.poemLineRefs[i]}
         key={i}
         frameRef={this.frameRef}
-        text={s}
+        text={l.string}
         shuffle={shuffleMode && shuffleStates[i]}
         spanLocations={spanLocationsList[i] ?? []}
         onTransitionEnd={this.refreshing ? this.handleSpanTransitionEnd(i) : undefined}

@@ -176,7 +176,8 @@ export default class Poet implements Params {
   getSentence(lastSenIndex?: number): {
     string: string,
     index: number,
-    words: string[]
+    words: string[],
+    wordIndexes: number[]
   } {
     // 还原last vector
     this.transferList.forEach((vec, id) => {
@@ -188,13 +189,15 @@ export default class Poet implements Params {
     let wordIndex = firstIndex
     let sentence = this.wordList[wordIndex]
     let words = [this.wordList[wordIndex]]
+    let wordIndexes = [wordIndex]
     while (true) {
       wordIndex = this.getNewWordIndex(wordIndex)
       const word = this.wordList[wordIndex]
+      if (word === '\n') break  // 换行符将不会出现在诗句中
       sentence = sentence.concat(word)
       words.push(word)
-      if (word === '\n')
-        break
+      wordIndexes.push(wordIndex)
+
       // 每生成一个词，提高所有词引发句子结束的概率
       for (let i = 1; i < len; i++) {
         this.transferList[i].v[0] *= this.beta
@@ -203,7 +206,8 @@ export default class Poet implements Params {
     return {
       string: sentence,
       index: firstIndex,
-      words
+      words,
+      wordIndexes
     }
   }
 }

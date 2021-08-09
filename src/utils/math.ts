@@ -15,13 +15,12 @@ export function randomChoice(p: number[]): number {
   return p.length - 1
 }
 
-export function randomSample(arr: any[], k: number): any[] {
-  let tmp = arr
-  let result = []
+export function randomSample<T>(arr: T[], k: number): T[] {
+  let tmp = [...arr]
+  let result: T[] = []
   for (let i = 0; i < Math.min(k, arr.length); i++) {
     const ptr = Math.floor(Math.random() * tmp.length)
-    result.push(tmp[ptr])
-    tmp = tmp.filter((v, i) => i !== ptr)
+    result.push(tmp.splice(ptr, 1)[0])
   }
   return result
 }
