@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/uncanny-valley-poetry/static/css/main.1ee5e604.chunk.css",
-    "main.js": "/uncanny-valley-poetry/static/js/main.54798be9.chunk.js",
-    "main.js.map": "/uncanny-valley-poetry/static/js/main.54798be9.chunk.js.map",
+    "main.css": "/uncanny-valley-poetry/static/css/main.5ce95252.chunk.css",
+    "main.js": "/uncanny-valley-poetry/static/js/main.df0f3a46.chunk.js",
+    "main.js.map": "/uncanny-valley-poetry/static/js/main.df0f3a46.chunk.js.map",
     "runtime-main.js": "/uncanny-valley-poetry/static/js/runtime-main.b807a9e5.js",
     "runtime-main.js.map": "/uncanny-valley-poetry/static/js/runtime-main.b807a9e5.js.map",
     "static/js/2.3f04a028.chunk.js": "/uncanny-valley-poetry/static/js/2.3f04a028.chunk.js",
@@ -10,9 +10,9 @@
     "static/js/3.7d073761.chunk.js": "/uncanny-valley-poetry/static/js/3.7d073761.chunk.js",
     "static/js/3.7d073761.chunk.js.map": "/uncanny-valley-poetry/static/js/3.7d073761.chunk.js.map",
     "index.html": "/uncanny-valley-poetry/index.html",
-    "static/css/main.1ee5e604.chunk.css.map": "/uncanny-valley-poetry/static/css/main.1ee5e604.chunk.css.map",
+    "static/css/main.5ce95252.chunk.css.map": "/uncanny-valley-poetry/static/css/main.5ce95252.chunk.css.map",
     "static/js/2.3f04a028.chunk.js.LICENSE.txt": "/uncanny-valley-poetry/static/js/2.3f04a028.chunk.js.LICENSE.txt",
-    "static/media/Index.css": "/uncanny-valley-poetry/static/media/syst.404dd71c.woff",
+    "static/media/Index.css": "/uncanny-valley-poetry/static/media/syst.0d6b90bd.woff",
     "static/media/title.c4b61619.png": "/uncanny-valley-poetry/static/media/title.c4b61619.png",
     "static/media/illustration/10171.jpg": "/uncanny-valley-poetry/static/media/illustration/10171.jpg",
     "static/media/illustration/10236.jpg": "/uncanny-valley-poetry/static/media/illustration/10236.jpg",
@@ -780,7 +780,7 @@
   "entrypoints": [
     "static/js/runtime-main.b807a9e5.js",
     "static/js/2.3f04a028.chunk.js",
-    "static/css/main.1ee5e604.chunk.css",
-    "static/js/main.54798be9.chunk.js"
+    "static/css/main.5ce95252.chunk.css",
+    "static/js/main.df0f3a46.chunk.js"
   ]
 }

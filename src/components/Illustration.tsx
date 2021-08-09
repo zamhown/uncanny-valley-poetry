@@ -143,6 +143,7 @@ export default class Illustration extends Component<IIllustrationProps, IIllustr
             zIndex: i,
             marginTop: `0px`,
             marginLeft: clicked ? `${CANVAS_WIDTH}px` : `${CANVAS_WIDTH - CANVAS_WIDTH / imgLen}px`,
+            boxShadow: clicked ? '0 0 5px black' : 'none',
             transitionDelay: `${0.1 * i}s`
           }}
         />)}
@@ -162,10 +163,18 @@ export default class Illustration extends Component<IIllustrationProps, IIllustr
       this._c2d.drawImage(img, 0, 0, 448, 224, 0, 0, CANVAS_WIDTH * 2, CANVAS_HEIGHT)
 
       if (!onlyLayer) {
+        const imgLen = this.imgC2d.length
+        if (this.mirror[layerId]) {
+          this.imgC2d[layerId].scale(-1, 1)
+          this.imgC2d[layerId].translate(-CANVAS_WIDTH / imgLen, 0)
+        } else {
+          this.imgC2d[layerId].scale(1, 1)
+          this.imgC2d[layerId].translate(0, 0)
+        }
         this.imgC2d[layerId].drawImage(
           img,
           0, 0, 224, 224,
-          0, 0, CANVAS_WIDTH / this.imgC2d.length, CANVAS_HEIGHT / this.imgC2d.length
+          0, 0, CANVAS_WIDTH / imgLen, CANVAS_HEIGHT / imgLen
         )
       }
 

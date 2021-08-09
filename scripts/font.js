@@ -2,12 +2,18 @@
 const Fontmin = require('fontmin');
 const words = require('./words');
 
+const staticWords = '0123456789已阅读行'
+
 module.exports = () => {
   console.log('Compressing the font file...')
+  const totalWords = [...new Set([
+    ...words.split(''),
+    ...staticWords.split('')
+  ])].join('')
   const fontmin = new Fontmin()
     .src('assets/syst.ttf')
     .use(Fontmin.glyph({ 
-        text: words,
+        text: totalWords,
         hinting: false
     }))
     .use(Fontmin.ttf2woff({

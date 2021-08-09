@@ -22,7 +22,6 @@
     display: block;
     position: relative;
     transition: 0.3s;
-    box-shadow: 0 0 5px black;
 }
 
 .illustration-mask span {
