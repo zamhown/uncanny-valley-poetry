@@ -27,7 +27,7 @@ body {
   -ms-transform: translate( -50%, -50%);
   transform: translate( -50%, -50%);
   border: red solid 2px;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(0, 0, 0, 0.2); /* rgba(255, 255, 255, 0.08); */
   filter: blur(10px);
 }
 
