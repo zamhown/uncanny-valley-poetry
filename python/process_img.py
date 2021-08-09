@@ -69,7 +69,7 @@ def process_img():
     net = get_net()
     word_img_map, img_class_map = get_word_img_map()
     print(list(word_img_map.keys()))
-    random_sample_word_img_map(word_img_map, 3)
+    random_sample_word_img_map(word_img_map, 5)
 
     with open(get_path('params/word_img_map.json'), 'w', encoding='utf-8') as file:
         file.write(json.dumps(word_img_map, ensure_ascii=False))
